@@ -1,0 +1,9 @@
+# 忽略环境文件夹
+.venv/
+
+# 忽略配置文件（包含爬虫或 API 的敏感信息）
+backend/config.py
+
+# 忽略 PyCharm 的缓存
+.idea/
+__pycache__/

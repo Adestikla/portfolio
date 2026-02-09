@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { margin: 0; background-color: #000; overflow: hidden; font-family: sans-serif; }
+        .preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: #121212; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        /* 核心修改：将数字和进度条垂直排列，互不干扰 */
+        .loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* 数字与进度条的间距 */
+        }
+
+        .counter {
+            color: #fff;
+            font-size: 2.5rem; /* 稍微加大一点，更有视觉冲击力 */
+            font-weight: bold;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .loader-content {
+            width: 300px;
+            height: 40px; /* 减小高度，让遮罩更精准 */
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .squiggly-container { filter: url(#squiggle); }
+
+        /* 底层静止灰线 */
+        .track-line { position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: #444; z-index: 1; opacity: 0.3; }
+
+        /* 遮罩层优化：严格限制高度 */
+        .mask {
+            position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+            overflow: hidden; background: #121212;
+        }
+
+        .wave-svg { position: absolute; left: 0; top: 0; width: 300px; height: 100%; }
+        .wave-path { fill: none; stroke-width: 3px; stroke-linecap: round; }
+
+        #mask-gray { z-index: 2; }
+        #mask-white { z-index: 3; background: none; }
+
+        .gray-head-fix {
+            position: absolute; right: 0; top: 50%; width: 8px; height: 2px;
+            background: #444; transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <defs>
+            <filter id="squiggle">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
+                <animate xlink:href="#squiggle" attributeName="baseFrequency" values="0.05;0.055;0.05" dur="0.2s" repeatCount="indefinite" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="preloader">
+        <div class="loader-wrapper">
+            <div class="counter">0%</div>
+
+            <div class="loader-content squiggly-container">
+                <div class="track-line"></div>
+
+                <div class="mask" id="mask-gray">
+                    <svg class="wave-svg" viewBox="0 0 300 40">
+                        <path id="path-gray" class="wave-path" stroke="#444"></path>
+                    </svg>
+                    <div class="gray-head-fix"></div>
+                </div>
+
+                <div class="mask" id="mask-white">
+                    <svg class="wave-svg" viewBox="0 0 300 40">
+                        <path id="path-white" class="wave-path" stroke="#fff"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <p style="color: #666; font-size: 12px; letter-spacing: 4px; margin-top: 10px;">LOADING RESOURCES</p>
+        </div>
+    </div>
+
+    <script>
+        // 增加密度：freq 改为 0.2
+        function createOptimizedPath(w, h, amp, freq) {
+            let p = `M 0 ${h/2} `;
+            for (let x = 0; x <= w; x++) {
+                const taper = Math.pow((w - x) / w, 2);
+                const y = (h/2) - (Math.sin(x * freq) * (amp * taper));
+                p += `L ${x} ${y} `;
+            }
+            return p + `L ${w + 10} ${h/2}`;
+        }
+
+        window.addEventListener("load", () => {
+            // 参数调整：freq = 0.2 让波浪更紧凑
+            const d = createOptimizedPath(300, 40, 7, 0.2);
+            document.getElementById('path-gray').setAttribute('d', d);
+            document.getElementById('path-white').setAttribute('d', d);
+
+            const progress = { val: 0 };
+            const maxGap = 5; // 减小一点点间距，让灰色“咬”得更紧
+
+            gsap.timeline()
+            .to(progress, {
+                val: 100,
+                duration: 4,
+                ease: "none",
+                onUpdate: () => {
+                    const p = progress.val;
+                    const whiteVal = p;
+                    const gap = Math.sin((p / 100) * Math.PI) * maxGap;
+                    let grayVal = Math.min(whiteVal + gap, 100);
+
+                    document.getElementById('mask-white').style.width = whiteVal + "%";
+                    document.getElementById('mask-gray').style.width = grayVal + "%";
+                    document.querySelector('.counter').innerText = Math.round(whiteVal) + "%";
+                }
+            })
+            .to(".preloader", {
+                y: "-100%",
+                duration: 1.2,
+                ease: "expo.inOut",
+                delay: 0.3
+            });
+
+            // 呼吸效果：减小位移，配合高密度波浪
+            gsap.to(".wave-path", {
+                x: -10,
+                duration: 0.8,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+        });
+    </script>
+</body>
+</html>
