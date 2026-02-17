@@ -2,150 +2,288 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>{{ title | default("Adestikla Portfolio") }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        body { margin: 0; background-color: #000; overflow: hidden; font-family: sans-serif; }
+        /* ================= 基础重置 ================= */
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
+            background-attachment: fixed;
+            overflow: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+        }
+
+        /* 噪点滤镜层 */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.12; pointer-events: none; z-index: 10000;
+        }
+
+        /* ================= 预加载容器 ================= */
         .preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: #121212; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
+            background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999;
         }
 
-        /* 核心修改：将数字和进度条垂直排列，互不干扰 */
-        .loader-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px; /* 数字与进度条的间距 */
-        }
+        .loader-wrapper { display: flex; flex-direction: column; align-items: center; gap: 30px; }
 
-        .counter {
-            color: #fff;
-            font-size: 2.5rem; /* 稍微加大一点，更有视觉冲击力 */
-            font-weight: bold;
-            font-variant-numeric: tabular-nums;
+        /* ================= 滚轮数字 ================= */
+        .odometer-container {
+            display: flex; height: 60px; overflow: hidden;
+            font-size: 3.5rem; font-weight: 700; line-height: 60px;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
         }
+        .digit-col { width: 40px; text-align: center; }
+        .digit-strip { display: flex; flex-direction: column; }
+        .digit-strip span { height: 60px; display: block; }
+        .percent-sign { width: 40px; text-align: left; color: rgba(255,255,255,0.3); font-size: 2.5rem; }
 
-        .loader-content {
-            width: 300px;
-            height: 40px; /* 减小高度，让遮罩更精准 */
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
+        /* ================= 波浪进度条 ================= */
+        .loader-content { width: 300px; height: 40px; position: relative; display: flex; align-items: center; }
         .squiggly-container { filter: url(#squiggle); }
+        .track-line { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
+        .mask { position: absolute; height: 100%; width: 0%; overflow: hidden; background: #9A4F33; }
+        .wave-svg { width: 300px; height: 40px; }
+        .wave-path { fill: none; stroke-width: 3px; }
 
-        /* 底层静止灰线 */
-        .track-line { position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: #444; z-index: 1; opacity: 0.3; }
-
-        /* 遮罩层优化：严格限制高度 */
-        .mask {
-            position: absolute; left: 0; top: 0; height: 100%; width: 0%;
-            overflow: hidden; background: #121212;
+        /* ================= 2.5D 英雄区布局 ================= */
+        .hero-section {
+            position: relative; width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
         }
 
-        .wave-svg { position: absolute; left: 0; top: 0; width: 300px; height: 100%; }
-        .wave-path { fill: none; stroke-width: 3px; stroke-linecap: round; }
-
-        #mask-gray { z-index: 2; }
-        #mask-white { z-index: 3; background: none; }
-
-        .gray-head-fix {
-            position: absolute; right: 0; top: 50%; width: 8px; height: 2px;
-            background: #444; transform: translateY(-50%);
+        .hero-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; /* 加载完再出 */
         }
+
+        .layer-bg { background-image: url('/static/img/back.jpg'); z-index: 1; }
+        .layer-figure { background-image: url('/static/img/figure.png'); z-index: 2; transform: scale(1.1); }
+
+        .reveal-title {
+            position: relative; z-index: 10; font-size: 8vw; font-weight: 900;
+            text-transform: uppercase; clip-path: inset(0 50% 0 50%);
+            white-space: nowrap; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .reveal-subtitle {
+            position: absolute; bottom: 20%; z-index: 10;
+            font-size: 1rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.6);
+            opacity: 0; transform: translateY(20px);
+        }
+
+    /* ================= 横向滚动布局 ================= */
+.horizontal-scroll-section {
+    overflow: hidden; /* 必须隐藏，因为内容会水平溢出 */
+}
+
+.horizontal-wrapper {
+    display: flex;
+    width: 300vw; /* 宽度取决于你有多少个作品，这里假设3页 */
+    height: 100vh;
+    align-items: center;
+    padding: 0 5vw;
+}
+
+/* ================= 磨砂玻璃作品卡片 ================= */
+.work-card {
+    width: 80vw;
+    height: 70vh;
+    padding: 2vw;
+    flex-shrink: 0;
+}
+
+.glass-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    overflow: hidden;
+    /* 【核心：iOS 级磨砂】 */
+    background: rgba(255, 255, 255, 0.05); /* 极低透明度 */
+    backdrop-filter: blur(25px) saturate(160%); /* 增加模糊和色彩饱和度 */
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 模拟边缘微光 */
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-container img {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.9;
+    /* 配合你的大地色背景，这个模式会非常有艺术感 */
+    mix-blend-mode: luminosity;
+    transition: 0.6s;
+}
+
+.glass-container:hover img {
+    opacity: 1;
+    mix-blend-mode: normal; /* 鼠标移上去恢复彩色 */
+}
+
+.work-info {
+    position: absolute; bottom: 40px; left: 40px;
+}
+
     </style>
 </head>
 <body>
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-        <defs>
-            <filter id="squiggle">
-                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
-                <animate xlink:href="#squiggle" attributeName="baseFrequency" values="0.05;0.055;0.05" dur="0.2s" repeatCount="indefinite" />
-            </filter>
-        </defs>
-    </svg>
+    <svg style="display:none"><defs><filter id="squiggle"><feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="3" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="3" /><animate attributeName="baseFrequency" values="0.2;0.25;0.2" dur="0.2s" repeatCount="indefinite" /></filter></defs></svg>
 
     <div class="preloader">
         <div class="loader-wrapper">
-            <div class="counter">0%</div>
-
+            <div class="odometer-container">
+                <div class="digit-col" id="col-h"><div class="digit-strip"></div></div>
+                <div class="digit-col" id="col-t"><div class="digit-strip"></div></div>
+                <div class="digit-col" id="col-o"><div class="digit-strip"></div></div>
+                <div class="percent-sign">%</div>
+            </div>
             <div class="loader-content squiggly-container">
                 <div class="track-line"></div>
-
                 <div class="mask" id="mask-gray">
-                    <svg class="wave-svg" viewBox="0 0 300 40">
-                        <path id="path-gray" class="wave-path" stroke="#444"></path>
-                    </svg>
-                    <div class="gray-head-fix"></div>
+                    <svg class="wave-svg"><path id="path-gray" class="wave-path" stroke="rgba(255,255,255,0.2)"></path></svg>
                 </div>
-
                 <div class="mask" id="mask-white">
-                    <svg class="wave-svg" viewBox="0 0 300 40">
-                        <path id="path-white" class="wave-path" stroke="#fff"></path>
-                    </svg>
+                    <svg class="wave-svg"><path id="path-white" class="wave-path" stroke="#fff"></path></svg>
                 </div>
             </div>
-
-            <p style="color: #666; font-size: 12px; letter-spacing: 4px; margin-top: 10px;">LOADING RESOURCES</p>
+            <p style="color: rgba(255,255,255,0.2); font-size: 11px; letter-spacing: 6px; font-weight: 700;">INITIALIZING</p>
         </div>
     </div>
 
+    <main class="hero-section">
+        <div class="hero-layer layer-bg"></div>
+        <div class="hero-layer layer-figure"></div>
+        <h1 class="reveal-title">Creative Portfolio</h1>
+        <p class="reveal-subtitle">DESIGN & DEVELOPMENT</p>
+    </main>
+
+    <section class="horizontal-scroll-section">
+        <div class="horizontal-wrapper">
+            <div class="work-card">
+                <div class="glass-container">
+                    <img src="/static/img/work1.jpg" alt="项目一">
+                    <div class="work-info">
+                        <h3>电商 UI 设计</h3>
+                        <p>2025 / 深圳职场项目</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="glass-container">
+                    <img src="/static/img/work2.jpg" alt="项目二">
+                    <div class="work-info">
+                        <h3>品牌视觉重构</h3>
+                        <p>2026 / 个人作品</p>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+    </section>
+
+    <section class="footer-section">
+        <h2>LET'S CONNECT</h2>
+    </section>
+
     <script>
-        // 增加密度：freq 改为 0.2
-        function createOptimizedPath(w, h, amp, freq) {
-            let p = `M 0 ${h/2} `;
-            for (let x = 0; x <= w; x++) {
-                const taper = Math.pow((w - x) / w, 2);
-                const y = (h/2) - (Math.sin(x * freq) * (amp * taper));
+        // 1. 注册插件（必须放在最前面）
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. 初始化滚轮数字
+        function createStrip(id, count) {
+            const strip = document.querySelector(`#${id} .digit-strip`);
+            let html = '';
+            for (let i = 0; i <= count; i++) html += `<span>${i % 10}</span>`;
+            strip.innerHTML = html;
+        }
+        createStrip('col-h', 1); createStrip('col-t', 11); createStrip('col-o', 101);
+
+        // 3. 波浪路径生成
+        function getPath() {
+            let p = `M 0 20 `;
+            for (let x = 0; x <= 300; x++) {
+                const taper = Math.pow((300 - x) / 300, 2);
+                const y = 20 - (Math.sin(x * 0.2) * (7 * taper));
                 p += `L ${x} ${y} `;
             }
-            return p + `L ${w + 10} ${h/2}`;
+            return p + `L 310 20`;
+        }
+
+        // 4. 定义横向滚动函数
+        function initHorizontalScroll() {
+            const wrapper = document.querySelector(".horizontal-wrapper");
+            if (!wrapper) return;
+
+            gsap.to(wrapper, {
+                x: () => -(wrapper.scrollWidth - window.innerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".horizontal-scroll-section",
+                    pin: true,        // 钉住页面
+                    scrub: 1,         // 丝滑跟随滚轮
+                    start: "top top",
+                    end: () => "+=" + wrapper.scrollWidth,
+                    invalidateOnRefresh: true
+                }
+            });
         }
 
         window.addEventListener("load", () => {
-            // 参数调整：freq = 0.2 让波浪更紧凑
-            const d = createOptimizedPath(300, 40, 7, 0.2);
-            document.getElementById('path-gray').setAttribute('d', d);
-            document.getElementById('path-white').setAttribute('d', d);
+            document.getElementById('path-gray').setAttribute('d', getPath());
+            document.getElementById('path-white').setAttribute('d', getPath());
 
             const progress = { val: 0 };
-            const maxGap = 5; // 减小一点点间距，让灰色“咬”得更紧
+            const tl = gsap.timeline();
 
-            gsap.timeline()
-            .to(progress, {
-                val: 100,
-                duration: 4,
-                ease: "none",
+            // --- A. 进度增长 ---
+            tl.to(progress, {
+                val: 100, duration: 4, ease: "power2.inOut",
                 onUpdate: () => {
                     const p = progress.val;
-                    const whiteVal = p;
-                    const gap = Math.sin((p / 100) * Math.PI) * maxGap;
-                    let grayVal = Math.min(whiteVal + gap, 100);
-
-                    document.getElementById('mask-white').style.width = whiteVal + "%";
-                    document.getElementById('mask-gray').style.width = grayVal + "%";
-                    document.querySelector('.counter').innerText = Math.round(whiteVal) + "%";
+                    document.getElementById('mask-white').style.width = p + "%";
+                    document.getElementById('mask-gray').style.width = Math.min(p + 5, 100) + "%";
+                    gsap.set("#col-o .digit-strip", { y: -p * 60 });
+                    gsap.set("#col-t .digit-strip", { y: -(p / 10) * 60 });
+                    gsap.set("#col-h .digit-strip", { y: p < 99 ? 0 : -(p - 99) * 60 });
                 }
             })
-            .to(".preloader", {
-                y: "-100%",
-                duration: 1.2,
-                ease: "expo.inOut",
-                delay: 0.3
+            // --- B. 转场与揭示 ---
+            .to(".hero-layer", { opacity: 1, duration: 2, ease: "power2.out", stagger: 0.5 }, "-=1")
+            .to(".loader-wrapper", { y: -50, opacity: 0, duration: 0.8, ease: "power3.in" })
+            .to(".preloader", { yPercent: -100, duration: 1.2, ease: "expo.inOut" }, "-=0.4")
+            .to(".reveal-title", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.8, ease: "power4.out" }, "-=0.6")
+            .from(".reveal-title", { scale: 1.15, duration: 2, ease: "power2.out" }, "-=1.8")
+            .to(".reveal-subtitle", { opacity: 1, y: 0, duration: 1 }, "-=1.2")
+            // --- C. 【修复点】动画结束后的回调 ---
+            .add(() => {
+                document.body.style.overflow = "auto"; // 允许滚动
+                initHorizontalScroll(); // 初始化横向滚动
             });
 
-            // 呼吸效果：减小位移，配合高密度波浪
-            gsap.to(".wave-path", {
-                x: -10,
-                duration: 0.8,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut"
+            // --- D. 独立动画：人物呼吸感 ---
+            gsap.to(".layer-figure", {
+                y: -30, rotation: 0.5, duration: 4,
+                repeat: -1, yoyo: true, ease: "sine.inOut"
+            });
+
+            // --- E. 独立动画：鼠标视差 ---
+            window.addEventListener("mousemove", (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 40;
+                const y = (e.clientY / window.innerHeight - 0.5) * 40;
+                gsap.to(".layer-bg", { x: x * 0.2, y: y * 0.2, duration: 1 });
+                gsap.to(".layer-figure", { x: x, y: y, duration: 1.2 });
             });
         });
     </script>
