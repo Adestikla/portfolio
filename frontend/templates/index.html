@@ -6,135 +6,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        /* ================= 基础重置 ================= */
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
-            background-attachment: fixed;
-            overflow: hidden;
-            font-family: 'Space Grotesk', sans-serif;
-            color: white;
-        }
-
-        /* 噪点滤镜层 */
-        body::after {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
-            opacity: 0.12; pointer-events: none; z-index: 10000;
-        }
-
-        /* ================= 预加载容器 ================= */
-        .preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999;
-        }
-
-        .loader-wrapper { display: flex; flex-direction: column; align-items: center; gap: 30px; }
-
-        /* ================= 滚轮数字 ================= */
-        .odometer-container {
-            display: flex; height: 60px; overflow: hidden;
-            font-size: 3.5rem; font-weight: 700; line-height: 60px;
-            mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-        }
-        .digit-col { width: 40px; text-align: center; }
-        .digit-strip { display: flex; flex-direction: column; }
-        .digit-strip span { height: 60px; display: block; }
-        .percent-sign { width: 40px; text-align: left; color: rgba(255,255,255,0.3); font-size: 2.5rem; }
-
-        /* ================= 波浪进度条 ================= */
-        .loader-content { width: 300px; height: 40px; position: relative; display: flex; align-items: center; }
-        .squiggly-container { filter: url(#squiggle); }
-        .track-line { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
-        .mask { position: absolute; height: 100%; width: 0%; overflow: hidden; background: #9A4F33; }
-        .wave-svg { width: 300px; height: 40px; }
-        .wave-path { fill: none; stroke-width: 3px; }
-
-        /* ================= 2.5D 英雄区布局 ================= */
-        .hero-section {
-            position: relative; width: 100%; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            overflow: hidden;
-        }
-
-        .hero-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            opacity: 0; /* 加载完再出 */
-        }
-
-        .layer-bg { background-image: url('/static/img/back.jpg'); z-index: 1; }
-        .layer-figure { background-image: url('/static/img/figure.png'); z-index: 2; transform: scale(1.1); }
-
-        .reveal-title {
-            position: relative; z-index: 10; font-size: 8vw; font-weight: 900;
-            text-transform: uppercase; clip-path: inset(0 50% 0 50%);
-            white-space: nowrap; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .reveal-subtitle {
-            position: absolute; bottom: 20%; z-index: 10;
-            font-size: 1rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.6);
-            opacity: 0; transform: translateY(20px);
-        }
-
-    /* ================= 横向滚动布局 ================= */
-.horizontal-scroll-section {
-    overflow: hidden; /* 必须隐藏，因为内容会水平溢出 */
-}
-
-.horizontal-wrapper {
-    display: flex;
-    width: 300vw; /* 宽度取决于你有多少个作品，这里假设3页 */
-    height: 100vh;
-    align-items: center;
-    padding: 0 5vw;
-}
-
-/* ================= 磨砂玻璃作品卡片 ================= */
-.work-card {
-    width: 80vw;
-    height: 70vh;
-    padding: 2vw;
-    flex-shrink: 0;
-}
-
-.glass-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 40px;
-    overflow: hidden;
-    /* 【核心：iOS 级磨砂】 */
-    background: rgba(255, 255, 255, 0.05); /* 极低透明度 */
-    backdrop-filter: blur(25px) saturate(160%); /* 增加模糊和色彩饱和度 */
-    -webkit-backdrop-filter: blur(25px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.15); /* 模拟边缘微光 */
-    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glass-container img {
-    width: 100%; height: 100%; object-fit: cover;
-    opacity: 0.9;
-    /* 配合你的大地色背景，这个模式会非常有艺术感 */
-    mix-blend-mode: luminosity;
-    transition: 0.6s;
-}
-
-.glass-container:hover img {
-    opacity: 1;
-    mix-blend-mode: normal; /* 鼠标移上去恢复彩色 */
-}
-
-.work-info {
-    position: absolute; bottom: 40px; left: 40px;
-}
-
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
 
@@ -170,27 +43,78 @@
 
     <section class="horizontal-scroll-section">
         <div class="horizontal-wrapper">
-            <div class="work-card">
-                <div class="glass-container">
-                    <img src="/static/img/work1.jpg" alt="项目一">
-                    <div class="work-info">
-                        <h3>电商 UI 设计</h3>
-                        <p>2025 / 深圳职场项目</p>
+            <div class="work-card directory-card">
+                <div class="glass-container directory-style">
+                    <div class="dir-section">
+                        <span>FEATURED</span>
+                        <ul>
+                            <li>UI/UX Design</li>
+                            <li>Brand Identity</li>
+                        </ul>
+                    </div>
+                    <div class="dir-section">
+                        <span>EXPERIENCE</span>
+                        <ul>
+                            <li>E-commerce Designer</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="work-card">
+            <div class="work-card quote-card">
                 <div class="glass-container">
-                    <img src="/static/img/work2.jpg" alt="项目二">
-                    <div class="work-info">
-                        <h3>品牌视觉重构</h3>
-                        <p>2026 / 个人作品</p>
+                    <div class="about-quote-content">
+                        <p class="main-quote">“设计不仅仅是视觉，更是关于解决问题与创造情感共鸣的过程。”</p>
+                        <div class="signature-box">
+                            <img src="/static/img/signature.png" alt="Signature" class="signature-img">
+                            <span>Adestikla, Designer</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div class="work-card bio-card">
+    <div class="glass-container bio-layout">
+        <div class="bio-left">
+            <div class="avatar-circle">
+                <img src="/static/img/figure.png" alt="Profile">
             </div>
+            <div class="personal-info">
+                <h2 class="name-en">CHAI KUNYANG</h2>
+                <ul class="info-list">
+                    <li><span>DEGREE</span>Full-time Junior College</li>
+                    <li><span>BIRTHDAY</span>2003.04.10</li>
+                    <li><span>CONTACT</span>+86 19528447410</li>
+                </ul>
+            </div>
+        </div>
+        <div class="bio-middle">
+            <h3>PROJECT EXPERIENCE</h3>
+            <p>Ancient Chinese Physics Poster Promotion...</p>
+        </div>
+    </div>
+</div>
+
+<div class="full-screen-overlay">
+    <div class="overlay-content-host"></div>
+</div>
+        </div>
+    </section>
+
+    <section class="vertical-snap-section" data-snap-text="UI/UX|DESIGN">
+        <div id="vertical-snap-container" class="snap-box"></div>
+    </section>
+
+    <section class="vertical-snap-section" data-snap-text="DATA|INTELLIGENCE">
+        <div class="snap-box"></div>
+    </section>
+
+    <section class="vertical-snap-section" data-snap-text="DECOUPLED|SYSTEM">
+        <div class="snap-box"></div>
+    </section>
+
+    <section class="vertical-snap-section" data-snap-text="CYBER|SECURITY">
+        <div class="snap-box"></div>
     </section>
 
     <section class="footer-section">
@@ -247,6 +171,31 @@
             const progress = { val: 0 };
             const tl = gsap.timeline();
 
+            // --- F. 点击放大交互 ---
+            const overlay = document.querySelector('.full-screen-overlay');
+            const overlayHost = document.querySelector('.overlay-content-host');
+            const cards = document.querySelectorAll('.horizontal-wrapper .glass-container');
+
+            cards.forEach(card => {
+                card.style.cursor = 'zoom-in';
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    // 我们不只是复制 innerHTML，我们给外层宿主也加上相同的类名
+                    // 这样 CSS 里的 .bio-layout 等样式才能在放大后生效
+                    overlayHost.className = 'overlay-content-host ' + card.className + ' expanded-view';
+                    overlayHost.innerHTML = card.innerHTML;
+
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+overlay.addEventListener('click', () => {
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto'; // 恢复滚动
+});
+
             // --- A. 进度增长 ---
             tl.to(progress, {
                 val: 100, duration: 4, ease: "power2.inOut",
@@ -287,5 +236,6 @@
             });
         });
     </script>
+<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
 </body>
 </html>

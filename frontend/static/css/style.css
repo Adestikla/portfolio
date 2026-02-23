@@ -1,0 +1,184 @@
+/* ================= 基础重置 ================= */
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+}
+
+/* 噪点滤镜层 */
+body::after {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.12; pointer-events: none; z-index: 10000;
+}
+
+/* ================= 预加载容器 ================= */
+.preloader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 9999;
+}
+
+.loader-wrapper { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+
+/* ================= 滚轮数字 ================= */
+.odometer-container {
+    display: flex; height: 60px; overflow: hidden;
+    font-size: 3.5rem; font-weight: 700; line-height: 60px;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+.digit-col { width: 40px; text-align: center; }
+.digit-strip { display: flex; flex-direction: column; }
+.digit-strip span { height: 60px; display: block; }
+.percent-sign { width: 40px; text-align: left; color: rgba(255,255,255,0.3); font-size: 2.5rem; }
+
+/* ================= 波浪进度条 ================= */
+.loader-content { width: 300px; height: 40px; position: relative; display: flex; align-items: center; }
+.squiggly-container { filter: url(#squiggle); }
+.track-line { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
+.mask { position: absolute; height: 100%; width: 0%; overflow: hidden; background: #9A4F33; }
+.wave-svg { width: 300px; height: 40px; }
+.wave-path { fill: none; stroke-width: 3px; }
+
+/* ================= 2.5D 英雄区布局 ================= */
+/* 路径修复：使用 ../img 替代 /static/img */
+.layer-bg { background-image: url('../img/back.jpg'); z-index: 1; }
+.layer-figure { background-image: url('../img/figure.png'); z-index: 2; transform: scale(1.1); }
+
+.hero-section {
+    position: relative; width: 100%; height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    overflow: hidden;
+}
+
+.hero-layer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    opacity: 0;
+}
+
+.reveal-title {
+    position: relative; z-index: 10; font-size: 8vw; font-weight: 900;
+    text-transform: uppercase; clip-path: inset(0 50% 0 50%);
+    white-space: nowrap; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.reveal-subtitle {
+    position: absolute; bottom: 20%; z-index: 10;
+    font-size: 1rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.6);
+    opacity: 0; transform: translateY(20px);
+}
+
+/* ================= 横向滚动布局 ================= */
+* { box-sizing: border-box; }
+
+.horizontal-scroll-section { position: relative; width: 100%; overflow: hidden; }
+
+.horizontal-wrapper {
+    display: flex; width: max-content; height: 100vh;
+    align-items: center; padding: 0 10vw; gap: 5vw;
+}
+
+.work-card {
+    width: 80vw !important; height: 70vh !important;
+    flex-shrink: 0; overflow: hidden; position: relative; cursor: zoom-in;
+}
+
+.glass-container {
+    width: 100%; height: 100%; border-radius: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px) saturate(160%);
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex; flex-direction: column;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-card:hover .glass-container {
+    transform: translateY(-10px) scale(1.01);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ================= 业务版块样式 ================= */
+.directory-style {
+    padding: 60px !important; justify-content: space-around;
+    align-items: center; flex-direction: row;
+}
+
+.dir-section span { color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 3px; display: block; margin-bottom: 20px; }
+.dir-section ul { list-style: none; padding: 0; margin: 0; }
+.dir-section li { font-size: 2rem; margin-bottom: 15px; font-weight: 700; opacity: 0.8; transition: 0.3s; }
+.dir-section li:hover { opacity: 1; transform: translateX(10px); }
+
+.about-quote-content { padding: 80px; text-align: right; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.main-quote { font-size: 2.8rem; font-weight: 400; line-height: 1.3; margin-bottom: 40px; }
+.signature-box { display: flex; flex-direction: column; align-items: flex-end; }
+.signature-img { width: 220px; margin-bottom: 10px; opacity: 0.9; }
+
+/* 简历卡片布局 */
+.bio-layout { display: grid; grid-template-columns: 1fr 2fr 1fr; padding: 50px; height: 100%; gap: 30px; }
+.avatar-circle { width: 180px; height: 180px; border-radius: 50%; border: 10px solid #E6A03D; overflow: hidden; margin-bottom: 20px; background: #fff; }
+.avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+.name-en { font-size: 2.5rem; font-weight: 900; color: #E6A03D; margin-bottom: 20px; }
+
+.info-list { list-style: none; padding: 0; }
+.info-list li { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-size: 0.9rem; }
+.info-list span { display: block; font-size: 0.7rem; opacity: 0.5; }
+
+.exp-date { font-weight: 700; color: #E6A03D; margin-bottom: 5px; }
+.skill-tag { display: inline-block; padding: 6px 12px; background: rgba(255,255,255,0.1); border-radius: 6px; margin: 0 5px 5px 0; font-size: 0.8rem; }
+
+/* ================= 全屏放大预览 ================= */
+.full-screen-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 20000; background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: zoom-out;
+}
+.full-screen-overlay.active { opacity: 1; visibility: visible; }
+.overlay-content-host { width: 90vw; height: 85vh; max-width: 1600px; transform: scale(0.9); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.full-screen-overlay.active .overlay-content-host { transform: scale(1); }
+
+/* 放大后的版式微调 */
+.expanded-view .bio-layout { grid-template-columns: 1.2fr 2fr 1.5fr; padding: 80px; gap: 60px; }
+.expanded-view .directory-style { padding: 100px; }
+
+/* ================= 转场卡片样式 ================= */
+.snap-box { background: rgba(0, 0, 0, 0.2) !important; overflow: hidden; position: relative; }
+.snap-box canvas { display: block; width: 100% !important; height: 100% !important; }
+
+.footer-section { height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+/* 全屏垂直转场样式 */
+.vertical-snap-section {
+    width: 100%;
+    height: 100vh; /* 占满一屏 */
+    position: relative;
+    background: transparent; /* 透出背景渐变 */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5; /* 确保它在普通内容之上 */
+    background: #7F2F19;
+}
+
+.vertical-snap-section .snap-box {
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+}
+
+/* 确保 Canvas 能够随屏幕缩放 */
+.snap-box canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
