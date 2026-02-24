@@ -28,3 +28,9 @@ async def get_data(type: str = "jobs"):
     if type == "jobs":
         return {"data": [{"title": "电商美工", "city": "深圳", "salary": "8k-12k"}]}
     return {"data": [{"title": "南山区公寓", "price": "3000"}]}
+
+# 详情页路由
+@app.get("/project/{project_id}", response_class=HTMLResponse)
+async def project_detail(request: Request, project_id: int):
+    # 这里之后可以根据 ID 读取不同的 PDF 风格内容
+    return templates.TemplateResponse("detail.html", {"request": request, "id": project_id})
