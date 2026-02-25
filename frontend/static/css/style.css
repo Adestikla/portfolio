@@ -1,11 +1,20 @@
+:root {
+    /* 使用相近色系的平滑渐变，避免对比色带来的脏感 */
+    --primary-sunset: linear-gradient(135deg, #F2613F 0%, #FFB067 100%);
+    --accent-orange: #F2613F;
+    --bg-dark: #121517; /* 提取自 back.jpg 的深青黑 */
+    --text-white: #F5F5F7;
+    --glass-bg: rgba(242, 97, 63, 0.05);
+    --glass-border: rgba(242, 97, 63, 0.2);
+    --accent-orange: #F2613F;
+}
 /* ================= 基础重置 ================= */
 body {
     margin: 0;
-    background: linear-gradient(135deg, #B46F47 0%, #7F2F19 100%);
-    background-attachment: fixed;
+    background: var(--bg-dark); /* 扁平化深色基调 */
     overflow-x: hidden;
     font-family: 'Space Grotesk', sans-serif;
-    color: white;
+    color: var(--text-white);
 }
 
 /* 噪点滤镜层 */
@@ -65,8 +74,10 @@ body::after {
 .reveal-title {
     position: relative; z-index: 10; font-size: 8vw; font-weight: 900;
     text-transform: uppercase; clip-path: inset(0 50% 0 50%);
-    white-space: nowrap; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    color: #ffffff; /* 恢复纯白，确保第一张图清晰 */
 }
+
 .reveal-subtitle {
     position: absolute; bottom: 20%; z-index: 10;
     font-size: 1rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.6);
@@ -85,25 +96,43 @@ body::after {
 
 .work-card {
     width: 80vw !important; height: 70vh !important;
-    flex-shrink: 0; overflow: hidden; position: relative; cursor: zoom-in;
+    flex-shrink: 0;
+    position: relative;
+    cursor: zoom-in;
 }
 
 .glass-container {
-    width: 100%; height: 100%; border-radius: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(25px) saturate(160%);
-    -webkit-backdrop-filter: blur(25px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 100%; height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+
+    /* 1. 提高基础亮度，彻底告别隐形和脏色 */
+    background: linear-gradient(135deg, rgba(242, 97, 63, 0.12) 0%, rgba(242, 97, 63, 0.02) 100%);
+
+    /* 2. 核心：加粗并提亮基础边框，让方块在不 Hover 时也清晰可见 */
+    border: 1px solid rgba(242, 97, 63, 0.35);
+
+    /* 3. 移除无效的 blur，用一点物理阴影把它从背景里“拔”出来 */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
     display: flex; flex-direction: column;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ================= 悬停状态：纯正的外部光圈 ================= */
 .work-card:hover .glass-container {
-    transform: translateY(-10px) scale(1.01);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-}
+    background: linear-gradient(135deg, rgba(242, 97, 63, 0.18) 0%, rgba(242, 97, 63, 0.05) 100%);
+    transform: translateY(-8px);
 
+    /* 1. 边框变为 100% 纯色的落日橙实线 */
+    border: 1px solid #F2613F;
+
+    /* 2. 纯粹的【外部光圈】，去掉任何 inset 内部阴影，光全部向外发散 */
+    box-shadow:
+        0 0 25px rgba(242, 97, 63, 0.6),   /* 近距离的强光圈 */
+        0 0 80px rgba(242, 97, 63, 0.15),  /* 远距离的氛围光散布 */
+        0 20px 40px rgba(0, 0, 0, 0.8);    /* 底部加深黑影，增强悬浮立体感 */
+}
 /* ================= 业务版块样式 ================= */
 .directory-style {
     padding: 60px !important; justify-content: space-around;
@@ -167,7 +196,7 @@ body::after {
     justify-content: center;
     align-items: center;
     z-index: 5; /* 确保它在普通内容之上 */
-    background: #7F2F19;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .vertical-snap-section .snap-box {
@@ -186,7 +215,7 @@ body::after {
 /* ================= 作品网格 (2排4列) ================= */
 .project-grid-section {
     padding: 100px 5vw;
-    background: #111; /* 深色背景增强对比 */
+    background: linear-gradient(to bottom, #ffffff 0%, #f0f2f5 100%); /* 深色背景增强对比 */
 }
 
 .rect-grid {
@@ -238,51 +267,189 @@ body::after {
 .detail-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 0 5vw 100px; }
 .showcase-img { width: 100%; border-radius: 10px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
 
-/* ================= 2x4 作品网格 ================= */
+/* ================= 极简海报风作品网格 ================= */
 .project-grid-section {
-    padding: 120px 5vw;
-    background: #0f0f0f;
+    padding: 150px 5vw; /* 上下留出巨大空白，增加呼吸感 */
+    background: transparent;
 }
 
 .rect-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4列 */
-    grid-template-rows: repeat(2, 1fr);    /* 2排 */
-    grid-gap: 25px;
-    max-width: 1400px;
+    grid-template-columns: repeat(4, 1fr); /* 保持 4 列，但图片变成竖的 */
+    grid-gap: 50px; /* 【核心】间距从 25px 直接拉大到 50px */
+    max-width: 1600px;
     margin: 0 auto;
 }
 
-.grid-item {
-    aspect-ratio: 16 / 10;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px; /* 还原 PDF 的硬朗感 */
+/* 整体卡片容器 (包含图片和底部文字) */
+.portfolio-item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 图片和文字之间的留白 */
+    text-decoration: none;
+    color: var(--text-white);
+    cursor: pointer;
+}
+
+/* 单独的图片容器 (继承了之前的琥珀色高光逻辑) */
+.portfolio-visual {
+    aspect-ratio: 3 / 4; /* 【核心】改为高级的竖图比例 */
+    background: rgba(242, 97, 63, 0.02);
+    border: 1px solid rgba(242, 97, 63, 0.15);
+    border-radius: 12px;
     overflow: hidden;
     position: relative;
-    transition: all 0.4s ease;
-    text-decoration: none;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.grid-item:hover {
-    border-color: #E6A03D;
-    transform: translateY(-5px);
-    background: rgba(230, 160, 61, 0.05);
+/* 悬停时的外发光仅作用于图片容器 */
+.portfolio-item:hover .portfolio-visual {
+    transform: translateY(-12px); /* 向上浮动更明显 */
+    border-color: #F2613F;
+    box-shadow: 0 0 40px rgba(242, 97, 63, 0.3); /* 琥珀色外光晕 */
 }
 
-.grid-thumb { width: 100%; height: 100%; background-size: cover; background-position: center; filter: grayscale(1); transition: 0.4s; }
-.grid-item:hover .grid-thumb { filter: grayscale(0); }
+/* 图片缩放交互 */
+.grid-thumb {
+    width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    filter: grayscale(0.8) contrast(1.1);
+    transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-/* ================= PDF 风格详情页预览层 ================= */
-/* 当点击网格进入新页面后的排版 */
-.detail-body { background: #EFEFEF; color: #111; }
-.detail-hero { padding: 100px 5vw; display: flex; flex-direction: column; gap: 40px; }
-.detail-title { font-size: 12vw; font-weight: 900; line-height: 0.8; letter-spacing: -6px; margin: 0; }
-.detail-meta { display: flex; justify-content: space-between; border-top: 1px solid #000; padding-top: 20px; font-weight: 700; }
+.portfolio-item:hover .grid-thumb {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.05); /* 鼠标放上去，图片在容器内微微放大，极其丝滑 */
+}
 
-.detail-content-grid {
+/* 底部文字排版 */
+.portfolio-meta {
+    padding: 0 5px;
+}
+
+.portfolio-meta h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-white);
+    transition: color 0.3s;
+}
+
+.portfolio-meta span {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* 悬停时文字微微发亮 */
+.portfolio-item:hover .portfolio-meta h4 {
+    color: #F2613F;
+}
+
+/* ========================================================= */
+/* ================= PDF 极简画廊风格 (Detail Page) ======== */
+/* ========================================================= */
+
+/* 强制重置详情页的背景为纸张白，文字为高级黑 */
+body.pdf-theme {
+    background: #F4F4F5; /* 微微偏暖的高级纸张灰白 */
+    color: #111111;
+    overflow-x: hidden;
+    overflow-y: auto; /* 允许正常上下滚动 */
+}
+
+/* 顶部导航 */
+.pdf-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 5vw;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.back-btn { text-decoration: none; color: #111; transition: opacity 0.3s; }
+.back-btn:hover { opacity: 0.5; }
+
+/* 核心内容容器 */
+.pdf-container {
+    padding: 0 5vw;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* 巨型标题区 */
+.pdf-header {
+    padding: 80px 0 40px 0;
+}
+.pdf-title {
+    font-size: 9vw;
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -4px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* Meta 信息栏 (PDF 典型的细线分割) */
+.pdf-meta {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 100px;
-    padding: 100px 5vw;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid #111;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding: 30px 0;
+    margin-bottom: 80px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 8px; }
+.meta-label { font-size: 0.75rem; font-weight: 700; opacity: 0.5; letter-spacing: 1px; }
+.meta-value { margin: 0; font-size: 1.1rem; font-weight: 700; }
+
+/* 两栏阅读区 */
+.pdf-body {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    margin-bottom: 100px;
+}
+.pdf-col-left h2 {
+    font-size: 3rem; margin: 0; line-height: 1; letter-spacing: -1px;
+}
+.pdf-col-right p {
+    font-size: 1.1rem; line-height: 1.8; color: #444; margin-bottom: 20px;
+}
+.pdf-col-right .lead-text {
+    font-size: 1.8rem; line-height: 1.5; color: #111; font-weight: 700; margin-bottom: 40px;
+}
+
+/* 画廊图片 */
+.pdf-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 100px;
+}
+.pdf-img {
+    width: 100%;
+    height: auto;
+    background: #E0E0E0; /* 图片加载前的占位色 */
+}
+
+/* 底部下一个项目 */
+.pdf-footer {
+    padding: 80px 0;
+    border-top: 2px solid #111;
+    text-align: right;
+    font-size: 3vw;
+    font-weight: 900;
+}
+.pdf-footer a { color: #111; text-decoration: none; transition: color 0.3s; }
+.pdf-footer a:hover { color: #F2613F; /* 悬停时透出你的主色调落日橙 */ }
+
+/* 响应式调整 (手机端) */
+@media (max-width: 768px) {
+    .pdf-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .pdf-body { grid-template-columns: 1fr; gap: 40px; }
+    .pdf-title { font-size: 15vw; letter-spacing: -2px; }
 }

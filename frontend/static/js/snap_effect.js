@@ -1,6 +1,6 @@
 /**
- * 工业动力学转场母版 - 逐字同步入场版
- * 核心：同步左到右逐字显示，压缩垂直间距，保持轴心对齐
+ * 工业动力学转场母版 - V18 (拟人光标注入版)
+ * 核心：保持 V17 的块对齐逻辑，注入拟人化光标状态机
  */
 const initSnapAnimations = () => {
     const containers = document.querySelectorAll('.snap-box');
@@ -12,14 +12,14 @@ const initSnapAnimations = () => {
             while(lines.length < 4) lines.push(lines[lines.length-1] || " ");
             if(lines.length > 4) lines = lines.slice(0, 4);
 
-            const totalFrames = 360;
-            let maxWidth = 0;
-            let step = 0;
+            const totalFrames = 420; // 适当拉长时间轴以容纳闪烁
+            let maxWidth = 0, step = 0, centeringOffset = 0;
 
             p.setup = () => {
                 const canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
                 canvas.parent(container);
-                p.textAlign(p.CENTER, p.CENTER);
+                // 关键：改为左对齐实现稳定打字，但通过 Offset 实现视觉居中
+                p.textAlign(p.LEFT, p.CENTER);
                 p.textFont('Space Grotesk');
                 p.textSize(p.height * 0.13);
                 p.textStyle(p.BOLD);
@@ -30,47 +30,62 @@ const initSnapAnimations = () => {
                     if (w > maxWidth) maxWidth = w;
                 });
                 step = maxWidth + 600;
+                centeringOffset = -maxWidth / 2; // 视觉对齐偏置
             };
 
             p.draw = () => {
                 p.clear();
                 let frame = p.frameCount % totalFrames;
+                let spacing = 220, xOffset = 0, reveal = 1;
+                let cursorState = 'none'; // none, blink, solid
+                let alpha = 255;
 
-                // --- 节奏与间距参数 ---
-                let spacing = 220;
-                let xOffset = 0;
-                let revealProgress = 1; // 默认全显示
+                // --- 1. 拟人化光标与动画状态机 ---
 
-                // --- 1. 0-60帧 (1s): 同步逐字出现 (取代淡入) ---
-                if (frame < 60) {
-                    revealProgress = p.map(frame, 0, 50, 0, 1, true); // 0.8s 内完成打印
+                // [0-40帧] 思考期：光标闪烁，文字未现
+                if (frame < 40) {
+                    reveal = 0; cursorState = 'blink';
+                }
+                // [40-100帧] 打字期：文字同步打出，光标常亮
+                else if (frame < 100) {
+                    reveal = p.map(frame, 40, 100, 0, 1, true);
+                    cursorState = 'solid';
                     spacing = 220;
                 }
-                // 2. 60-120帧 (1s): 宽间距停顿阅读
-                else if (frame < 120) {
+                // [100-140帧] 停顿期：字打完了，光标闪烁
+                else if (frame < 140) {
+                    reveal = 1; cursorState = 'blink';
                     spacing = 220;
                 }
-                // 3. 120-180帧 (1s): 垂直聚合
-                else if (frame < 240) {
-                    spacing = p.map(frame, 120, 180, 220, 110, true);
-                    // 聚合后的 1s 绝对停顿在此处涵盖
-                    if (frame >= 180 && frame < 240) {
-                        spacing = 110;
-                        xOffset = 0;
-                    }
+                // [140-200帧] 聚合期：上下合并，光标按要求消失
+                else if (frame < 200) {
+                    reveal = 1; cursorState = 'none';
+                    spacing = p.map(frame, 140, 200, 220, 110, true);
                 }
-                // 4. 240-330帧 (1.5s): 匀速平移
-                else if (frame < 330) {
+                // [200-260帧] 聚合停顿：并拢静止 1s，光标保持隐藏
+                else if (frame < 260) {
+                    reveal = 1; cursorState = 'none';
+                    spacing = 110; xOffset = 0;
+                }
+                // [260-360帧] 平移期：整体向左滑动，光标重新闪烁
+                else if (frame < 360) {
+                    reveal = 1; cursorState = 'blink';
                     spacing = 110;
-                    xOffset = p.map(frame, 240, 330, 0, -step, true);
+                    xOffset = p.map(frame, 260, 360, 0, -step, true);
                 }
-                // 5. 330-360帧: 渐隐
+                // [360-400帧] 删除期：像按退格键一样逐个消失，光标常亮
+                else if (frame < 400) {
+                    spacing = 110; xOffset = -step;
+                    reveal = p.map(frame, 360, 400, 1, 0, true);
+                    cursorState = 'solid';
+                }
+                // [400-420帧] 结尾：文字消失，光标最后闪烁几下
                 else {
-                    spacing = 110;
-                    xOffset = -step;
-                    revealProgress = p.map(frame, 330, 360, 1, 0, true);
+                    spacing = 110; xOffset = -step;
+                    reveal = 0; cursorState = 'blink';
                 }
 
+                // --- 2. 渲染逻辑 ---
                 p.push();
                 p.translate(p.width / 2 + xOffset, p.height / 2);
 
@@ -79,23 +94,27 @@ const initSnapAnimations = () => {
                     p.translate(r * step, 0);
 
                     lines.forEach((lineText, i) => {
-                        p.push();
                         let y = (i - 1.5) * spacing;
-                        p.translate(0, y);
+                        let visibleCount = p.floor(lineText.length * reveal);
+                        let currentText = lineText.substring(0, visibleCount);
 
-                        // --- 核心：逐字显示逻辑 ---
-                        let chars = lineText.split('');
-                        let fullWidth = p.textWidth(lineText);
-                        let currentText = "";
+                        p.fill(242, 97, 63, alpha);
+                        p.text(currentText, centeringOffset, y);
 
-                        // 计算当前该显示多少个字
-                        let visibleCount = p.floor(chars.length * revealProgress);
-                        currentText = lineText.substring(0, visibleCount);
+                        // --- 3. 绘制 3px 细光标 ---
+                        let isBlinking = (p.frameCount % 20 < 10);
+                        let shouldDraw = (cursorState === 'solid') || (cursorState === 'blink' && isBlinking);
 
-                        // 即使字没出全，也要按全宽度的中心对齐，防止文字跳动
-                        p.fill(255);
-                        p.text(currentText, 0, 0);
-                        p.pop();
+                        if (shouldDraw) {
+                            let tw = p.textWidth(currentText);
+                            let cursorX = centeringOffset + tw + 8; // 文字后的间距
+                            p.push();
+                            p.noStroke();
+                            p.fill(242, 97, 63, alpha);
+                            // 锁定 3px 宽度，高度随字号
+                            p.rect(cursorX, y - p.textSize()*0.42, 3, p.textSize()*0.85);
+                            p.pop();
+                        }
                     });
                     p.pop();
                 }
@@ -104,12 +123,11 @@ const initSnapAnimations = () => {
 
             p.windowResized = () => {
                 p.resizeCanvas(container.offsetWidth, container.offsetHeight);
+                p.textSize(p.height * 0.13);
                 maxWidth = 0;
-                lines.forEach(line => {
-                    let w = p.textWidth(line);
-                    if (w > maxWidth) maxWidth = w;
-                });
+                lines.forEach(line => { let w = p.textWidth(line); if (w > maxWidth) maxWidth = w; });
                 step = maxWidth + 600;
+                centeringOffset = -maxWidth / 2;
             };
         };
         new p5(sketch);
