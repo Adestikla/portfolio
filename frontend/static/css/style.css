@@ -453,3 +453,94 @@ body.pdf-theme {
     .pdf-body { grid-template-columns: 1fr; gap: 40px; }
     .pdf-title { font-size: 15vw; letter-spacing: -2px; }
 }
+
+/* ================= 3D 爬虫矩阵动画板块 ================= */
+.crawler-3d-section {
+    /* 这个高度决定了你需要滚动多久才能看完整个粒子变形动画 */
+    /* 300vh 意味着你要滚动 3 个屏幕的高度 */
+    height: 600vh;
+    position: relative;
+    background: #000; /* 纯黑背景让白色的发光粒子更明显 */
+}
+
+.crawler-sticky-wrapper {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh; /* 始终占满当前屏幕 */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#crawler-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 悬浮在 3D 画布上的 UI */
+.crawler-ui-layer {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none; /* 默认不挡住鼠标操作 */
+}
+
+.crawler-title {
+    font-size: 5vw;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+    color: #fff;
+    opacity: 0; /* 初始隐藏，等 3D 动画变形完再用 GSAP 显现 */
+}
+
+.crawler-subtitle {
+    color: #F2613F;
+    letter-spacing: 5px;
+    font-size: 1rem;
+    margin-bottom: 40px;
+    opacity: 0;
+}
+
+/* 赛博朋克风搜索框 */
+.crawler-search-box {
+    display: flex;
+    gap: 15px;
+    pointer-events: auto; /* 恢复搜索框的点击和输入功能 */
+    opacity: 0;
+}
+
+.cyber-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 15px 30px;
+    width: 400px;
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    outline: none;
+}
+.cyber-input:focus { border-color: #F2613F; }
+
+.cyber-btn {
+    background: #F2613F;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.cyber-btn:hover { background: #fff; color: #F2613F; }

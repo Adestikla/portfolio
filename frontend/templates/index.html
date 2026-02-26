@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
@@ -185,17 +186,19 @@
         <div class="snap-box"></div>
     </section>
 
-    <section class="project-grid-section">
-        <div class="rect-grid">
-            <a href="/project/4" class="portfolio-item">
-                <div class="portfolio-visual">
-                    <div class="grid-thumb" style="background-image: url('/static/img/work1.jpg')"></div>
+    <section class="crawler-3d-section">
+        <div class="crawler-sticky-wrapper">
+            <canvas id="crawler-canvas"></canvas>
+
+            <div class="crawler-ui-layer">
+                <h2 class="crawler-title">WEB CRAWLER MATRIX</h2>
+                <p class="crawler-subtitle">Structuring the Chaos of the Web</p>
+
+                <div class="crawler-search-box">
+                    <input type="text" placeholder="Enter target keyword or URL..." class="cyber-input">
+                    <button class="cyber-btn">INITIATE CRAWL</button>
                 </div>
-                <div class="portfolio-meta">
-                    <h4>Web Crawler Matrix</h4>
-                    <span>Python & FastAPI</span>
-                </div>
-            </a>
+            </div>
         </div>
     </section>
 
@@ -301,6 +304,12 @@ overlay.addEventListener('click', () => {
             .add(() => {
                 document.body.style.overflow = "auto"; // 允许滚动
                 initHorizontalScroll(); // 初始化横向滚动
+
+                // 【核心修复】：等排版彻底撑开后，向 3D 脚本发射“开始监听”的信号
+                window.dispatchEvent(new Event("start3DScroll"));
+
+                // 强制 GSAP 重新结算所有的滚动坐标
+                setTimeout(() => { ScrollTrigger.refresh(); }, 200);
             });
 
             // --- D. 独立动画：人物呼吸感 ---
@@ -319,5 +328,7 @@ overlay.addEventListener('click', () => {
         });
     </script>
 <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+    <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
 </body>
 </html>
