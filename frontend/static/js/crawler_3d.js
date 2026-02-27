@@ -166,6 +166,9 @@ window.addEventListener("load", () => {
     };
 
     const material = new THREE.ShaderMaterial({
+        // 【就是这里！上一次漏掉了这行，导致 GPU 收不到任何指令】
+        uniforms: uniforms,
+
         vertexShader: `
             uniform float uTime;
             uniform float uPhase;
@@ -177,21 +180,19 @@ window.addEventListener("load", () => {
                 vPos = position; 
                 vec3 pos = position;
                 
-                // 保留物理浮游感抖动
-                pos.x += sin(uTime * 2.0 + aRandom.x) * 1.5;
-                pos.y += cos(uTime * 2.0 + aRandom.y) * 1.5;
-                pos.z += sin(uTime * 2.0 + aRandom.z) * 1.5;
+                // 【加强版物理抖动】
+                pos.x += sin(uTime * 3.5 + aRandom.x * 20.0) * 4.0;
+                pos.y += cos(uTime * 3.0 + aRandom.y * 20.0) * 4.0;
+                pos.z += sin(uTime * 4.0 + aRandom.z * 20.0) * 4.0;
 
                 vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-                
-                // 恢复纯净的近大远小算法，依靠物理堆叠的密度来展现厚重感
                 gl_PointSize = aSize * (500.0 / -mvPosition.z);
                 gl_Position = projectionMatrix * mvPosition;
             }
         `,
         fragmentShader: `
             uniform vec3 uColor;
-            uniform float uPhase; // 接收当前的动画阶段
+            uniform float uPhase;
             varying vec3 vPos;
             
             void main() {
@@ -201,19 +202,32 @@ window.addEventListener("load", () => {
                 
                 float alpha = smoothstep(0.5, 0.0, ll);
                 
-                vec3 colorMain = vec3(0.95, 0.38, 0.25); // 主色调：落日橙 #F2613F
-                vec3 colorSecond = vec3(1.0, 0.75, 0.0); // 第二色：亮金黄色
+                vec3 colorMain = vec3(0.95, 0.38, 0.25); // 主色：落日橙
+                vec3 colorSecond = vec3(1.0, 0.75, 0.0); // 拼接色：金黄
                 
-                vec3 finalColor = colorMain; // 默认前 3 个阶段全是纯主色调
+                vec3 finalColor = colorMain; 
                 
-                // 【核心】：当进入第 4 阶段 (最后 Logo 阶段) 时，进行双色拼接
-                if (uPhase > 3.1) {
-                    // 利用粒子的 X 轴左右位置，把颜色像拼接图一样融合
-                    float mixFactor = smoothstep(-60.0, 60.0, vPos.x);
-                    finalColor = mix(colorMain, colorSecond, mixFactor);
+                // 【CPU 蓝绿三层上色】
+                if (uPhase > 2.1 && uPhase < 3.9) {
+                    float cpuWeight = smoothstep(2.1, 3.0, uPhase) * smoothstep(3.9, 3.0, uPhase);
+                    
+                    vec3 targetColor = colorMain;
+                    if (vPos.y > 40.0) targetColor = vec3(0.3, 0.6, 1.0);      // 顶层科技蓝
+                    else if (vPos.y < -40.0) targetColor = vec3(0.5, 0.9, 0.4); // 底层雷蛇绿
+                    
+                    finalColor = mix(colorMain, targetColor, cpuWeight);
                 }
                 
-                gl_FragColor = vec4(finalColor, alpha * 0.9);
+                // 【A字双色拼接】
+                if (uPhase > 3.1) {
+                    float aWeight = smoothstep(3.1, 4.0, uPhase);
+                    float mixFactor = smoothstep(-60.0, 60.0, vPos.x);
+                    vec3 aColor = mix(colorMain, colorSecond, mixFactor);
+                    
+                    finalColor = mix(finalColor, aColor, aWeight);
+                }
+                
+                gl_FragColor = vec4(finalColor, alpha * 0.95);
             }
         `,
         transparent: true,
@@ -260,8 +274,7 @@ window.addEventListener("load", () => {
 
           // 阶段 4: 最终 Logo
           .to(params, { phase: 4, ease: "power1.inOut", duration: 1 })
-          .to(particleSystem.position, { x: 0, y: 0, z: 60, duration: 1 }, "<")
-          // 【修复】：Logo 绝对不乱转，向左微侧 5 度，极其稳固！
+          .to(particleSystem.position, { x: 0, y: -65, z: 60, duration: 1 }, "<")
           .to(particleSystem.rotation, { y: -0.08, x: 0.02, z: 0, duration: 1 }, "<")
           .to('.crawler-ui-layer > *', { opacity: 1, y: 0, duration: 0.1, stagger: 0.05 });
     });
