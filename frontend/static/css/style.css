@@ -544,3 +544,92 @@ body.pdf-theme {
     transition: 0.3s;
 }
 .cyber-btn:hover { background: #fff; color: #F2613F; }
+
+/* ================= 爬虫结果面板样式 ================= */
+.cyber-results-container {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(242, 97, 63, 0.4);
+    box-shadow: 0 0 20px rgba(242, 97, 63, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 隐藏状态 */
+.cyber-results-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.95);
+}
+
+.result-header {
+    color: #F2613F;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(242, 97, 63, 0.3);
+    padding-bottom: 10px;
+}
+
+.cyber-result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.cyber-result-item:last-child { border-bottom: none; }
+
+.cyber-label { font-size: 0.75rem; opacity: 0.6; letter-spacing: 1px; }
+.cyber-value { font-size: 1.1rem; font-weight: 700; color: #fff; }
+
+/* ================= 极客实时终端 ================= */
+.cyber-terminal {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(0, 15, 0, 0.85); /* 极深的暗绿色 */
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace; /* 黑客打字机字体 */
+    color: #00ff00;
+    text-align: left;
+    transition: all 0.3s;
+}
+.cyber-terminal.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); display: none; }
+.terminal-header { background: rgba(0, 255, 0, 0.2); padding: 5px 15px; font-size: 0.8rem; font-weight: bold; }
+.terminal-body { padding: 15px; height: 160px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; }
+.terminal-body div { margin-bottom: 5px; }
+.log-warn { color: #ff4444; } /* 红色报警字 */
+.log-success { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+
+/* ================= 赛博风下拉选择框 ================= */
+.cyber-select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0 20px;
+    height: 52px; /* 和 input 保持同高 */
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    outline: none;
+    cursor: pointer;
+    appearance: none; /* 隐藏默认箭头，显得更硬核 */
+    -webkit-appearance: none;
+}
+.cyber-select:focus { border-color: #F2613F; }
+
+/* 展开后的选项底色 (必须是不透明深色，否则看不清字) */
+.cyber-select option {
+    background: #121517;
+    color: white;
+    padding: 10px;
+}

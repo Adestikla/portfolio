@@ -3,6 +3,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 import os
+from backend.crawlers.job_spider import UniversalScraper
+import json
+from starlette.responses import StreamingResponse
 
 app = FastAPI()
 
@@ -24,10 +27,15 @@ async def read_item(request: Request):
 
 # 4. 模拟爬虫数据接口（先占位，方便前端调用）
 @app.get("/api/search")
-async def get_data(type: str = "jobs"):
-    if type == "jobs":
-        return {"data": [{"title": "电商美工", "city": "深圳", "salary": "8k-12k"}]}
-    return {"data": [{"title": "南山区公寓", "price": "3000"}]}
+async def get_data(keyword: str = "UI设计", edu: str = "不限"):
+    scraper = UniversalScraper(headless=True)
+
+    # 构建 SSE 事件流生成器，把用户输入的岗位和学历传给爬虫
+    async def event_generator():
+        async for chunk in scraper.fetch_data_stream(keyword, edu):
+            yield f"data: {json.dumps(chunk)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 # 详情页路由
 PROJECTS_DB = {

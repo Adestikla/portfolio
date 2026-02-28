@@ -195,9 +195,24 @@
                 <p class="crawler-subtitle">Structuring the Chaos of the Web</p>
 
                 <div class="crawler-search-box">
-                    <input type="text" placeholder="Enter target keyword or URL..." class="cyber-input">
-                    <button class="cyber-btn">INITIATE CRAWL</button>
+                    <input type="text" id="crawl-input" placeholder="输入目标岗位 (如: 前端开发)..." class="cyber-input">
+
+                    <select id="edu-select" class="cyber-select">
+                        <option value="不限">不限学历</option>
+                        <option value="大专">大专</option>
+                        <option value="本科">全日制本科</option>
+                        <option value="硕士">硕士及以上</option>
+                    </select>
+
+                    <button id="crawl-btn" class="cyber-btn">INITIATE CRAWL</button>
                 </div>
+
+                <div id="terminal-log" class="cyber-terminal hidden">
+                    <div class="terminal-header">SYS.LOG.STREAM <span style="animation: blink 1s infinite;">_</span></div>
+                    <div class="terminal-body" id="log-content"></div>
+                </div>
+
+                <div id="crawler-results" class="cyber-results-container hidden"></div>
             </div>
         </div>
     </section>
@@ -330,5 +345,98 @@ overlay.addEventListener('click', () => {
 <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
 <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
     <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
+
+<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+    <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('crawl-btn');
+            const input = document.getElementById('crawl-input');
+            const resultsBox = document.getElementById('crawler-results');
+            const terminal = document.getElementById('terminal-log');
+            const logContent = document.getElementById('log-content');
+
+            if(btn && input) {
+                btn.addEventListener('click', () => {
+                    // 获取岗位输入和学历下拉框的值
+                    const keyword = input.value || "UI/UX设计";
+                    const edu = document.getElementById('edu-select').value;
+
+                    const originalText = btn.innerText;
+
+                    // UI 状态重置
+                    btn.innerText = "LINK ESTABLISHED...";
+                    btn.style.opacity = "0.7";
+                    btn.style.pointerEvents = "none";
+                    resultsBox.classList.add('hidden');
+
+                    // 打开黑客终端
+                    terminal.classList.remove('hidden');
+                    terminal.style.display = "block";
+                    logContent.innerHTML = '> ESTABLISHING SECURE CONNECTION...<br>';
+
+                    // 【核心修改】：把 keyword 和 edu 拼接到 URL 传给后端！
+                    const targetUrl = `/api/search?keyword=${encodeURIComponent(keyword)}&edu=${encodeURIComponent(edu)}`;
+                    const eventSource = new EventSource(targetUrl);
+
+                    eventSource.onmessage = function(event) {
+                        const parsed = JSON.parse(event.data);
+
+                        if (parsed.type === 'log') {
+                            // 收到一行日志，马上追加到黑客终端里
+                            const logLine = document.createElement('div');
+                            if (parsed.msg.includes('⚠️')) logLine.classList.add('log-warn');
+                            else if (parsed.msg.includes('✅')) logLine.classList.add('log-success');
+
+                            logLine.innerText = `> ${parsed.msg}`;
+                            logContent.appendChild(logLine);
+
+                            // 自动滚动到终端最底部
+                            logContent.scrollTop = logContent.scrollHeight;
+                        }
+                        else if (parsed.type === 'result') {
+                            // 爬虫和清洗彻底完成，关闭连接
+                            eventSource.close();
+
+                            // 渲染最终结果
+                            let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED ]</h4>`;
+                            parsed.data.forEach(item => {
+                                htmlContent += `
+                                    <div class="cyber-result-item">
+                                        <div><div class="cyber-label">COMPANY</div><div class="cyber-value">${item.company}</div></div>
+                                        <div><div class="cyber-label">POSITION</div><div class="cyber-value">${item.title}</div></div>
+                                        <div><div class="cyber-label">SALARY</div><div class="cyber-value">${item.salary}</div></div>
+                                    </div>
+                                `;
+                            });
+
+                            resultsBox.innerHTML = htmlContent;
+                            resultsBox.classList.remove('hidden');
+
+                            // 恢复按钮状态
+                            btn.innerText = originalText;
+                            btn.style.opacity = "1";
+                            btn.style.pointerEvents = "auto";
+
+                            // 3秒后自动隐藏控制台日志，保持界面清爽
+                            setTimeout(() => {
+                                terminal.classList.add('hidden');
+                                setTimeout(() => { terminal.style.display = "none"; }, 300);
+                            }, 3000);
+                        }
+                    };
+
+                    eventSource.onerror = function() {
+                        eventSource.close();
+                        logContent.innerHTML += `<div class="log-warn">> [FATAL ERROR] CONNECTION LOST</div>`;
+                        btn.innerText = "RETRY CRAWL";
+                        btn.style.opacity = "1";
+                        btn.style.pointerEvents = "auto";
+                    };
+                });
+            }
+        });
+    </script>
 </body>
 </html>
