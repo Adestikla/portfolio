@@ -547,19 +547,57 @@ body.pdf-theme {
 
 /* ================= 爬虫结果面板样式 ================= */
 .cyber-results-container {
-    margin-top: 30px;
-    width: 100%;
-    max-width: 600px;
-    background: rgba(0, 0, 0, 0.65);
-    border: 1px solid rgba(242, 97, 63, 0.4);
-    box-shadow: 0 0 20px rgba(242, 97, 63, 0.15);
-    backdrop-filter: blur(12px);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: left;
-    max-height: 300px;
-    overflow-y: auto;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 999 !important; /* 强制提升到极高层，防止被 3D 画布或滤镜层覆盖拦截 */
+    pointer-events: auto !important; /* 强制接受鼠标事件 */
+    overflow-y: auto !important; /* 确保溢出时出现滚动条 */
+
+    /* 【神级属性】解决你的第二个问题：防止滚动穿透！
+       当面板内容滚动到底部时，网页的主滚动条绝对不会跟着动，彻底隔离！*/
+    overscroll-behavior: contain !important;
+}
+
+/* 允许终端日志也正常滚动且不穿透 */
+.cyber-terminal {
+    position: relative;
+    z-index: 999 !important;
+    pointer-events: auto !important;
+    overscroll-behavior: contain !important;
+}
+
+/* 确保每一行数据都不会被拦截鼠标 */
+.cyber-result-item {
+    pointer-events: auto !important;
+}
+
+/* 2. 定制面板滚动条 (橙色) */
+.cyber-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+.cyber-results-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.cyber-results-container::-webkit-scrollbar-thumb {
+    background: rgba(242, 97, 63, 0.8);
+    border-radius: 4px;
+}
+.cyber-results-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(242, 97, 63, 1);
+}
+
+/* 3. 定制绿字黑客终端滚动条 (绿色) */
+.terminal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.terminal-body::-webkit-scrollbar-track {
+    background: rgba(0, 15, 0, 0.5);
+}
+.terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.5);
+}
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 1);
 }
 
 /* 隐藏状态 */
@@ -632,4 +670,39 @@ body.pdf-theme {
     background: #121517;
     color: white;
     padding: 10px;
+}
+
+/* 1. 【极度重要】强制恢复鼠标事件，允许拖动滑动条！ */
+.cyber-results-container, .cyber-terminal {
+    pointer-events: auto !important;
+}
+
+/* 2. 定制面板滚动条 (橙色) */
+.cyber-results-container::-webkit-scrollbar {
+    width: 6px; /* 稍微变细一点，显得高级 */
+}
+.cyber-results-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.cyber-results-container::-webkit-scrollbar-thumb {
+    background: rgba(242, 97, 63, 0.8); /* 你的主题橙色 */
+    border-radius: 4px;
+}
+.cyber-results-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(242, 97, 63, 1);
+}
+
+/* 3. 定制绿字黑客终端滚动条 (绿色) */
+.terminal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.terminal-body::-webkit-scrollbar-track {
+    background: rgba(0, 15, 0, 0.5);
+}
+.terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.5);
+}
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 1);
 }

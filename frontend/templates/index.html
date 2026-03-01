@@ -400,13 +400,29 @@ overlay.addEventListener('click', () => {
                             eventSource.close();
 
                             // 渲染最终结果
-                            let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED ]</h4>`;
+                            let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED | 来源: 国家大学生就业平台 ]</h4>`;
+
                             parsed.data.forEach(item => {
                                 htmlContent += `
                                     <div class="cyber-result-item">
-                                        <div><div class="cyber-label">COMPANY</div><div class="cyber-value">${item.company}</div></div>
-                                        <div><div class="cyber-label">POSITION</div><div class="cyber-value">${item.title}</div></div>
-                                        <div><div class="cyber-label">SALARY</div><div class="cyber-value">${item.salary}</div></div>
+                                        <div style="flex: 2;">
+                                            <div class="cyber-label">COMPANY</div>
+                                            <div class="cyber-value">${item.company}</div>
+                                        </div>
+                                        <div style="flex: 2;">
+                                            <div class="cyber-label">POSITION</div>
+                                            <div class="cyber-value">${item.title}</div>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div class="cyber-label">SALARY</div>
+                                            <div class="cyber-value">${item.salary}</div>
+                                        </div>
+                                        <div style="flex: 1; text-align: right;">
+                                            <div class="cyber-label">SOURCE</div>
+                                            <div class="cyber-value" style="color: #00ff00; font-size: 0.85rem; text-shadow: 0 0 5px #00ff00;">
+                                                ${item.source}
+                                            </div>
+                                        </div>
                                     </div>
                                 `;
                             });

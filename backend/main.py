@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -27,12 +29,36 @@ async def read_item(request: Request):
 
 # 4. 模拟爬虫数据接口（先占位，方便前端调用）
 @app.get("/api/search")
-async def get_data(keyword: str = "UI设计", edu: str = "不限"):
+async def get_data(request: Request, keyword: str = "UI设计", edu: str = "不限"):
     scraper = UniversalScraper(headless=True)
 
-    # 构建 SSE 事件流生成器，把用户输入的岗位和学历传给爬虫
+    # 创建一个消息队列，作为爬虫和前端之间的“缓冲池”
+    queue = asyncio.Queue()
+
+    # 1. 生产者：定义一个独立的后台爬虫任务
+    async def run_scraper():
+        try:
+            async for chunk in scraper.fetch_data_stream(keyword, edu):
+                await queue.put(chunk)  # 把日志塞进队列
+        except Exception as e:
+            await queue.put({"type": "log", "msg": f"❌ 爬虫发生致命异常: {str(e)}"})
+        finally:
+            await queue.put(None)  # 爬虫结束时，丢入一个 None 作为结束信号
+
+    # 2. 将爬虫丢进后台默默运行，彻底脱离 HTTP 请求的绑架！
+    asyncio.create_task(run_scraper())
+
+    # 3. 消费者：不断从队列里拿出日志，推给前台网页
     async def event_generator():
-        async for chunk in scraper.fetch_data_stream(keyword, edu):
+        while True:
+            # 如果访客不耐烦关掉了网页，立刻停止推送，节省服务器性能
+            if await request.is_disconnected():
+                break
+
+            chunk = await queue.get()  # 等待爬虫往队列里扔东西
+            if chunk is None:  # 收到结束信号，停止推送
+                break
+
             yield f"data: {json.dumps(chunk)}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
