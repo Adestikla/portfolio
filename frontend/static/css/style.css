@@ -151,8 +151,15 @@ body::after {
 
 /* 简历卡片布局 */
 .bio-layout { display: grid; grid-template-columns: 1fr 2fr 1fr; padding: 50px; height: 100%; gap: 30px; }
-.avatar-circle { width: 180px; height: 180px; border-radius: 50%; border: 10px solid #E6A03D; overflow: hidden; margin-bottom: 20px; background: #fff; }
-.avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-circle { width: 180px;height: 180px;border-radius: 50%;  /* 这个属性让它变成圆的 */
+    border: 10px solid #E6A03D;
+    overflow: hidden;
+}
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* 这个神级属性会自动把 800px 的图完美缩放并填满 180px 的框，不会变形 */
+}
 .name-en { font-size: 2.5rem; font-weight: 900; color: #E6A03D; margin-bottom: 20px; }
 
 .info-list { list-style: none; padding: 0; }
@@ -705,4 +712,132 @@ body.pdf-theme {
 }
 .terminal-body::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 255, 0, 1);
+}
+
+/* 1. 微调三列比例，给中间的3个项目方块留出更多空间 */
+.bio-layout {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr; /* 左侧偏窄，右侧分配更多空间给长条形卡片 */
+    padding: 50px;
+    height: 100%;
+    gap: 60px;
+}
+
+/* --- 左侧区域：利用 Flexbox 把二维码推到最底下 --- */
+.bio-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 关键：自动把顶部信息和底部二维码拉开距离 */
+    height: 100%;
+}
+
+/* 左下角二维码容器 */
+.qr-container {
+    display: flex;
+    gap: 15px;
+    margin-top: auto; /* 强制将容器推至底部 */
+}
+
+/* 正方形、带圆角的二维码卡片 */
+.qr-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px; /* 圆角 */
+    width: 110px;        /* 固定宽度 */
+    height: 110px;       /* 固定高度，形成正方形 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+.qr-item:hover {
+    border-color: #F2613F;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+.qr-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: #fff;
+    padding: 5px;
+}
+.qr-item p {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #F2613F;
+    letter-spacing: 1px;
+}
+
+/* --- 右侧区域：横向长条形项目 --- */
+.bio-right-projects {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.section-title {
+    color: #E6A03D;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+/* 项目列表容器：上下排列 */
+.text-projects-column {
+    display: flex;
+    flex-direction: column; /* 让内部卡片上下排布 */
+    gap: 20px;              /* 卡片之间的间距 */
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* 横向长条形卡片 */
+.text-project-block {
+    width: 100%; /* 占满右侧宽度 */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px 30px;
+    display: flex;             /* 让卡片内部文字和按钮左右排布 */
+    flex-direction: row;
+    align-items: center;       /* 垂直居中对齐 */
+    justify-content: space-between; /* 文字在左，按钮在右 */
+    transition: all 0.3s;
+}
+.text-project-block:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #F2613F;
+    transform: translateX(10px); /* 悬停时微微向右滑动，很优雅 */
+}
+
+/* 卡片内部文字区域 */
+.tp-content {
+    flex: 1;
+    padding-right: 30px; /* 给右边按钮留点呼吸空间 */
+}
+.tp-year { font-family: 'Courier New', monospace; color: #F2613F; font-size: 0.75rem; margin-bottom: 8px; }
+.tp-title { font-size: 1.3rem; font-weight: 900; margin: 0 0 8px 0; color: white; text-transform: uppercase; letter-spacing: 1px;}
+.tp-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; margin: 0; }
+
+/* 右侧的探索按钮 */
+.tp-link {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid rgba(242, 97, 63, 0.5);
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: 0.3s;
+    white-space: nowrap; /* 确保按钮文字不会换行 */
+}
+.tp-link:hover {
+    background: #F2613F;
+    border-color: #F2613F;
+    color: white;
 }
