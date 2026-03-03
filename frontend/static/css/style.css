@@ -183,8 +183,31 @@ body::after {
 .full-screen-overlay.active .overlay-content-host { transform: scale(1); }
 
 /* 放大后的版式微调 */
-.expanded-view .bio-layout { grid-template-columns: 1.2fr 2fr 1.5fr; padding: 80px; gap: 60px; }
-.expanded-view .directory-style { padding: 100px; }
+.expanded-view .bio-layout {
+    grid-template-columns: 1.2fr 2.5fr; /* 左侧个人信息，右侧项目列表 */
+    padding: 80px;
+    gap: 80px;
+}
+.expanded-view .directory-style {
+    padding: 100px;
+}
+
+/* 2. 放大状态下的二维码样式 */
+.expanded-view .qr-item {
+    width: 150px;        /* 容器变宽 */
+    height: 150px;       /* 容器变高 */
+    border-radius: 20px; /* 圆角变得更柔和 */
+}
+.expanded-view .qr-item img {
+    width: 90px;         /* 内部图片变大 */
+    height: 90px;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+.expanded-view .qr-item p {
+    font-size: 0.95rem;  /* 底部文字微微变大 */
+    letter-spacing: 2px;
+}
 
 /* ================= 转场卡片样式 ================= */
 .snap-box { background: rgba(0, 0, 0, 0.2) !important; overflow: hidden; position: relative; }
@@ -276,15 +299,16 @@ body::after {
 
 /* ================= 极简海报风作品网格 ================= */
 .project-grid-section {
-    padding: 150px 5vw; /* 上下留出巨大空白，增加呼吸感 */
+    padding: 150px 5vw;
     background: transparent;
 }
 
 .rect-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 保持 4 列，但图片变成竖的 */
-    grid-gap: 50px; /* 【核心】间距从 25px 直接拉大到 50px */
-    max-width: 1600px;
+    /* 【核心修改】：从 repeat(4, 1fr) 改为 repeat(2, 1fr)，变为每排2个 */
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 60px; /* 稍微拉大间距，让2x2的卡片呼吸感更强 */
+    max-width: 1200px; /* 收缩最大宽度，防止在大屏幕下图片显得过于庞大 */
     margin: 0 auto;
 }
 
@@ -292,15 +316,16 @@ body::after {
 .portfolio-item {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 图片和文字之间的留白 */
+    gap: 20px;
     text-decoration: none;
     color: var(--text-white);
     cursor: pointer;
 }
 
-/* 单独的图片容器 (继承了之前的琥珀色高光逻辑) */
+/* 单独的图片容器 */
 .portfolio-visual {
-    aspect-ratio: 3 / 4; /* 【核心】改为高级的竖图比例 */
+    /* 【核心修改】：强烈建议改为 16/9 (宽图) 或 4/3。这里使用 16/9 更有电影级质感 */
+    aspect-ratio: 16 / 9;
     background: rgba(242, 97, 63, 0.02);
     border: 1px solid rgba(242, 97, 63, 0.15);
     border-radius: 12px;
@@ -311,9 +336,9 @@ body::after {
 
 /* 悬停时的外发光仅作用于图片容器 */
 .portfolio-item:hover .portfolio-visual {
-    transform: translateY(-12px); /* 向上浮动更明显 */
+    transform: translateY(-12px);
     border-color: #F2613F;
-    box-shadow: 0 0 40px rgba(242, 97, 63, 0.3); /* 琥珀色外光晕 */
+    box-shadow: 0 0 40px rgba(242, 97, 63, 0.3);
 }
 
 /* 图片缩放交互 */
@@ -841,3 +866,54 @@ body.pdf-theme {
     border-color: #F2613F;
     color: white;
 }
+
+/* ================= 详情页：可滚动极客代码块 ================= */
+.scrollable-code-container {
+    width: 100%;
+    background: #121517; /* 与你网站的深色背景呼应 */
+    border: 1px solid rgba(242, 97, 63, 0.3); /* 你的主题橙色边框 */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    margin-bottom: 40px;
+}
+
+/* 仿 MacOS 窗口顶部栏 */
+.code-header {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.code-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+.code-header .red { background: #ff5f56; }
+.code-header .yellow { background: #ffbd2e; }
+.code-header .green { background: #27c93f; }
+.code-header .file-name {
+    margin-left: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* 滚动代码区域 */
+.scrollable-code-container pre {
+    margin: 0;
+    padding: 30px;
+    max-height: 65vh; /* 核心：限制最高高度，占屏幕65% */
+    overflow-y: auto; /* 核心：超出高度后允许在框内滚动 */
+    overflow-x: auto; /* 允许横向滚动以防代码过长 */
+    color: #00ff00; /* 黑客绿字体 */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* 定制代码块专属的橙色滚动条 */
+.scrollable-code-container pre::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollable-code-container pre::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.scrollable-code-container pre::-webkit-scrollbar-thumb { background: rgba(242, 97, 63, 0.5); border-radius: 4px; }
+.scrollable-code-container pre::-webkit-scrollbar-thumb:hover { background: rgba(242, 97, 63, 1); }

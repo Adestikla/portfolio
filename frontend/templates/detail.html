@@ -55,7 +55,19 @@
         </main>
 
         <section class="pdf-gallery">
-            <img src="{{ project.image }}" alt="Showcase" class="pdf-img">
+            {% if project.code %}
+                <div class="scrollable-code-container">
+                    <div class="code-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="file-name">{{ project.filename | default("source_code.py") }}</span>
+                    </div>
+                    <pre><code class="language-python">{{ project.code }}</code></pre>
+                </div>
+            {% else %}
+                <img src="{{ project.image }}" alt="Showcase" class="pdf-img">
+            {% endif %}
         </section>
 
         <footer class="pdf-footer">
