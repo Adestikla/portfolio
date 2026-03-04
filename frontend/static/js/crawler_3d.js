@@ -244,41 +244,59 @@ window.addEventListener("load", () => {
 
     // 初始状态设定：放在屏幕外围，并且透明
     gsap.set(particleSystem.position, { z: 350 });
-    gsap.set('.crawler-ui-layer > *', { opacity: 0, y: 20 });
 
     // 【核心修复】：听到 index.html 开火的信号后，才创建滚动触发器！
     window.addEventListener("start3DScroll", () => {
+        // 1. 初始状态设定
+        gsap.set('.phase-text-container', { opacity: 0, y: 30 });
+        gsap.set('.crawler-ui-layer', { opacity: 0, pointerEvents: "none" });
+        // 【关键】：只隐藏前三个元素，千万别碰终端(terminal)和结果框(results)
+        gsap.set(['.crawler-title', '.crawler-subtitle', '.crawler-search-box'], { opacity: 0, y: 20 });
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".crawler-3d-section",
-                start: "top top", // 此时此刻量到的 top 绝对是精准的
+                start: "top top",
                 end: "bottom bottom",
-                scrub: 1.5,
+                scrub: 1,
             }
         });
 
-        tl.to(params, { phase: 1, ease: "power1.inOut", duration: 1 })
-          .to(particleSystem.position, { x: 0, z: -50, duration: 1 }, "<")
-          .to(particleSystem.rotation, { y: 0.1, x: -0.1, duration: 1 }, "<") // 极其微小的偏移
+        // ================= 阶段 1: 混沌 -> Web 网页 =================
+        tl.to(params, { phase: 1, ease: "none", duration: 2 }, "step1")
+          .to(particleSystem.position, { x: 120, z: -50, duration: 2 }, "step1")
+          .to(particleSystem.rotation, { y: 0.1, x: -0.1, duration: 2 }, "step1")
+          .to("#text-phase-1", { opacity: 1, y: 0, duration: 0.5 }, "step1+=0.5");
 
-          // 阶段 2: 网络球体
-          .to(params, { phase: 2, ease: "power1.inOut", duration: 1 })
-          .to(particleSystem.position, { x: 120, z: 80, duration: 1 }, "<")
-          .to(particleSystem.rotation, { y: 0.2, x: 0.1, duration: 1 }, "<") // 侧一点点
+        // ================= 阶段 2: Web -> 网络安全球体 =================
+        tl.to("#text-phase-1", { opacity: 0, y: -30, duration: 0.5 }, "step2")
+          .to(params, { phase: 2, ease: "none", duration: 2 }, "step2")
+          .to(particleSystem.position, { x: 140, z: 80, duration: 2 }, "step2")
+          .to(particleSystem.rotation, { y: 0.2, x: 0.1, duration: 2 }, "step2")
+          .to("#text-phase-2", { opacity: 1, y: 0, duration: 0.5 }, "step2+=0.5");
 
-          // 阶段 3: CPU 沉积层 (倾斜成上帝视角！)
-          .to(params, { phase: 3, ease: "power1.inOut", duration: 1 })
-          .to(particleSystem.position, { x: 0, y: 0, z: -100, duration: 1 }, "<")
-          // 【核心魔法】：X轴翻下，Y轴侧转，形成极其高级的 2.5D 晶体管透视视角！
-          .to(particleSystem.rotation, { x: 0.8, y: 0.5, z: 0, duration: 1 }, "<")
+        // ================= 阶段 3: 球体 -> CPU 数据流 =================
+        tl.to("#text-phase-2", { opacity: 0, y: -30, duration: 0.5 }, "step3")
+          .to(params, { phase: 3, ease: "none", duration: 2 }, "step3")
+          .to(particleSystem.position, { x: 120, y: -20, z: -100, duration: 2 }, "step3")
+          .to(particleSystem.rotation, { x: 0.8, y: 0.5, z: 0, duration: 2 }, "step3")
+          .to("#text-phase-3", { opacity: 1, y: 0, duration: 0.5 }, "step3+=0.5");
 
-          // 阶段 4: 最终 Logo
-          .to(params, { phase: 4, ease: "power1.inOut", duration: 1 })
-          .to(particleSystem.position, { x: 0, y: -65, z: 60, duration: 1 }, "<")
-          .to(particleSystem.rotation, { y: -0.08, x: 0.02, z: 0, duration: 1 }, "<")
-          .to('.crawler-ui-layer > *', { opacity: 1, y: 0, duration: 0.1, stagger: 0.05 });
+        // ================= 阶段 4: CPU -> 最终 Logo & 交互 UI =================
+        tl.to("#text-phase-3", { opacity: 0, y: -30, duration: 0.5 }, "step4")
+          .to(params, { phase: 4, ease: "none", duration: 2 }, "step4")
+          .to(particleSystem.position, { x: 0, y: -65, z: 60, duration: 2 }, "step4")
+          .to(particleSystem.rotation, { y: -0.08, x: 0.02, z: 0, duration: 2 }, "step4")
+          // 【修复点 1】：先让父容器恢复显示和鼠标事件
+          .to('.crawler-ui-layer', { opacity: 1, pointerEvents: "auto", duration: 0.1 }, "step4+=1")
+          // 【修复点 2】：只让标题、副标题和搜索框以优雅的阶梯式(stagger)浮现出来
+          .to(['.crawler-title', '.crawler-subtitle', '.crawler-search-box'], {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.2
+          }, "step4+=1");
     });
-    gsap.set('.crawler-ui-layer > *', { opacity: 0, y: 20 });
 
     // 5. 渲染循环
     const phasesArray = [shapes.chaos, shapes.web, shapes.network, shapes.streams, shapes.logo];

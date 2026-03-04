@@ -54,7 +54,7 @@
             </div>
         </main>
 
-        <section class="pdf-gallery">
+       <section class="pdf-gallery">
             {% if project.code %}
                 <div class="scrollable-code-container">
                     <div class="code-header">
@@ -66,7 +66,22 @@
                     <pre><code class="language-python">{{ project.code }}</code></pre>
                 </div>
             {% else %}
-                <img src="{{ project.image }}" alt="Showcase" class="pdf-img">
+                <img src="{{ project.image }}" alt="Main Showcase" class="pdf-img main-showcase-img">
+            {% endif %}
+
+            {% if project.gallery %}
+                <div class="more-details-section">
+                    <h3 class="more-title">EXPLORE MORE</h3>
+                    <div class="rect-grid detail-mini-grid">
+                        {% for img_path in project.gallery %}
+                            <div class="portfolio-item mini-card">
+                                <div class="portfolio-visual square-visual">
+                                    <div class="grid-thumb" style="background-image: url('{{ img_path }}')"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             {% endif %}
         </section>
 

@@ -260,12 +260,34 @@
         <div class="crawler-sticky-wrapper">
             <canvas id="crawler-canvas"></canvas>
 
+            <div class="phase-text-container" id="text-phase-1">
+                <h3>STAGE 01 / DATA GATHERING</h3>
+                <p>Deploying automated spiders across the decentralized web to index raw, unstructured data nodes.</p>
+            </div>
+
+            <div class="phase-text-container" id="text-phase-2">
+                <h3>STAGE 02 / NETWORK MAPPING</h3>
+                <p>Constructing relational graphs to identify clusters, security vulnerabilities, and encrypted pathways.</p>
+            </div>
+
+            <div class="phase-text-container" id="text-phase-3">
+                <h3>STAGE 03 / DATA PROCESSING</h3>
+                <p>Filtering noise through decoupled cloud architectures and structuring highly usable intel matrices.</p>
+            </div>
+
             <div class="crawler-ui-layer">
-                <h2 class="crawler-title">WEB CRAWLER MATRIX</h2>
-                <p class="crawler-subtitle">Structuring the Chaos of the Web</p>
+                <h2 class="crawler-title" style="opacity: 1;">WEB CRAWLER MATRIX</h2>
+                <p class="crawler-subtitle" style="opacity: 1;">Structuring the Chaos of the Web</p>
 
                 <div class="crawler-search-box">
-                    <input type="text" id="crawl-input" placeholder="输入目标岗位 (如: 前端开发)..." class="cyber-input">
+                    <select id="engine-select" class="cyber-select" style="width: 140px; border-color: #00ff00; color: #00ff00;">
+                        <option value="job">JOBS (招聘)</option>
+                        <option value="house">HOUSING (租房)</option>
+                    </select>
+
+                    <input type="text" id="city-input" placeholder="城市(如: 深圳)" class="cyber-input" style="width: 140px;">
+
+                    <input type="text" id="crawl-input" placeholder="输入目标 (如: 前端开发 / 南山一室)..." class="cyber-input">
 
                     <select id="edu-select" class="cyber-select">
                         <option value="不限">不限学历</option>
@@ -412,11 +434,7 @@ overlay.addEventListener('click', () => {
             });
         });
     </script>
-<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
-<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
-    <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
-
-<script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+        <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
     <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
 
     <script>
@@ -430,7 +448,9 @@ overlay.addEventListener('click', () => {
             if(btn && input) {
                 btn.addEventListener('click', () => {
                     // 获取岗位输入和学历下拉框的值
-                    const keyword = input.value || "UI/UX设计";
+                    const engine = document.getElementById('engine-select').value;
+                    const city = document.getElementById('city-input').value || "深圳"; // 默认深圳
+                    const keyword = input.value || (engine === 'job' ? "前端开发" : "整租房源");
                     const edu = document.getElementById('edu-select').value;
 
                     const originalText = btn.innerText;
@@ -446,8 +466,8 @@ overlay.addEventListener('click', () => {
                     terminal.style.display = "block";
                     logContent.innerHTML = '> ESTABLISHING SECURE CONNECTION...<br>';
 
-                    // 【核心修改】：把 keyword 和 edu 拼接到 URL 传给后端！
-                    const targetUrl = `/api/search?keyword=${encodeURIComponent(keyword)}&edu=${encodeURIComponent(edu)}`;
+                    // 【核心修改】：把 engine(引擎), keyword 和 edu 拼接到 URL 传给后端！
+                    const targetUrl = `/api/search?engine=${encodeURIComponent(engine)}&city=${encodeURIComponent(city)}&keyword=${encodeURIComponent(keyword)}&edu=${encodeURIComponent(edu)}`;
                     const eventSource = new EventSource(targetUrl);
 
                     eventSource.onmessage = function(event) {
@@ -469,47 +489,70 @@ overlay.addEventListener('click', () => {
                             // 爬虫和清洗彻底完成，关闭连接
                             eventSource.close();
 
-                            // 渲染最终结果
-                            let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED | 来源: 国家大学生就业平台 ]</h4>`;
+                            // 如果抓到了真实数据
+                            if (parsed.data && parsed.data.length > 0) {
+                                // 1. 改掉死板的头部文案，变成动态多源提示
+                                let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED | 分布式多节点数据汇编 ]</h4>`;
 
-                            parsed.data.forEach(item => {
-                                htmlContent += `
-                                    <div class="cyber-result-item">
-                                        <div style="flex: 2;">
-                                            <div class="cyber-label">COMPANY</div>
-                                            <div class="cyber-value">${item.company}</div>
-                                        </div>
-                                        <div style="flex: 2;">
-                                            <div class="cyber-label">POSITION</div>
-                                            <div class="cyber-value">${item.title}</div>
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <div class="cyber-label">SALARY</div>
-                                            <div class="cyber-value">${item.salary}</div>
-                                        </div>
-                                        <div style="flex: 1; text-align: right;">
-                                            <div class="cyber-label">SOURCE</div>
-                                            <div class="cyber-value" style="color: #00ff00; font-size: 0.85rem; text-shadow: 0 0 5px #00ff00;">
-                                                ${item.source}
+                                parsed.data.forEach(item => {
+                                    // 2. 根据来源名称，动态分配样式类
+                                    let sourceClass = "source-badge";
+                                    let sourceName = item.source || "未知节点";
+                                    if (sourceName.includes("NCSS") || sourceName.includes("国家")) sourceClass += " source-ncss";
+                                    else if (sourceName.includes("Zhaopin") || sourceName.includes("智联")) sourceClass += " source-zhaopin";
+                                    else if (sourceName.includes("Wellcee")) sourceClass += " source-wellcee";
+                                    else sourceClass += " source-ncss"; // 兜底颜色
+
+                                    // 3. 将标签加入到 HTML 结构中 (新增了第 4 列)
+                                    htmlContent += `
+                                        <div class="cyber-result-item">
+                                            <div style="flex: 2;">
+                                                <div class="cyber-label">COMPANY</div>
+                                                <div class="cyber-value">${item.company}</div>
+                                            </div>
+                                            <div style="flex: 2;">
+                                                <div class="cyber-label">POSITION</div>
+                                                <div class="cyber-value">${item.title}</div>
+                                            </div>
+                                            <div style="flex: 1.2;">
+                                                <div class="cyber-label">LOCATION</div>
+                                                <div class="cyber-value">${item.city || '未知'}</div>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <div class="cyber-label">SALARY</div>
+                                                <div class="cyber-value">${item.salary}</div>
+                                            </div>
+                                            <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center;">
+                                                <div class="${sourceClass}">${sourceName}</div>
                                             </div>
                                         </div>
-                                    </div>
-                                `;
-                            });
+                                    `;
+                                });
 
-                            resultsBox.innerHTML = htmlContent;
-                            resultsBox.classList.remove('hidden');
+                                resultsBox.innerHTML = htmlContent;
+                                resultsBox.classList.remove('hidden');
 
-                            // 恢复按钮状态
-                            btn.innerText = originalText;
-                            btn.style.opacity = "1";
-                            btn.style.pointerEvents = "auto";
+                                // 恢复按钮状态
+                                btn.innerText = originalText;
+                                btn.style.opacity = "1";
+                                btn.style.pointerEvents = "auto";
 
-                            // 3秒后自动隐藏控制台日志，保持界面清爽
-                            setTimeout(() => {
-                                terminal.classList.add('hidden');
-                                setTimeout(() => { terminal.style.display = "none"; }, 300);
-                            }, 3000);
+                                // 3秒后自动隐藏控制台日志
+                                setTimeout(() => {
+                                    terminal.classList.add('hidden');
+                                    setTimeout(() => { terminal.style.display = "none"; }, 300);
+                                }, 3000);
+                            } else {
+                                // 【核心修改】：如果没有抓到数据（爬虫被拦截或报错了）
+                                // 按钮标红，并且不要隐藏终端！
+                                btn.innerText = "CRAWL FAILED / RETRY";
+                                btn.style.opacity = "1";
+                                btn.style.background = "#ff4444"; // 变红警示
+                                btn.style.pointerEvents = "auto";
+
+                                logContent.innerHTML += `<div class="log-warn">> [SYSTEM HALTED] 数据流中断，未能抓取到有效节点。</div>`;
+                                logContent.scrollTop = logContent.scrollHeight;
+                            }
                         }
                     };
 

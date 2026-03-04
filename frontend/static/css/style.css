@@ -144,6 +144,7 @@ body::after {
 .dir-section li { font-size: 2rem; margin-bottom: 15px; font-weight: 700; opacity: 0.8; transition: 0.3s; }
 .dir-section li:hover { opacity: 1; transform: translateX(10px); }
 
+
 .about-quote-content { padding: 80px; text-align: right; height: 100%; display: flex; flex-direction: column; justify-content: center; }
 .main-quote { font-size: 2.8rem; font-weight: 400; line-height: 1.3; margin-bottom: 40px; }
 .signature-box { display: flex; flex-direction: column; align-items: flex-end; }
@@ -580,13 +581,17 @@ body.pdf-theme {
 /* ================= 爬虫结果面板样式 ================= */
 .cyber-results-container {
     position: relative;
-    z-index: 999 !important; /* 强制提升到极高层，防止被 3D 画布或滤镜层覆盖拦截 */
-    pointer-events: auto !important; /* 强制接受鼠标事件 */
-    overflow-y: auto !important; /* 确保溢出时出现滚动条 */
-
-    /* 【神级属性】解决你的第二个问题：防止滚动穿透！
-       当面板内容滚动到底部时，网页的主滚动条绝对不会跟着动，彻底隔离！*/
+    z-index: 999 !important;
+    pointer-events: auto !important;
+    overflow-y: auto !important;
     overscroll-behavior: contain !important;
+
+    /* 【核心修复】：必须限制最大高度，才能触发内部的滚动条！ */
+    max-height: 50vh; /* 最高只占屏幕的一半高度 */
+    width: 100%;
+    max-width: 1050px; /* 限制最大宽度，让排版更集中高级 */
+    margin-top: 30px;
+    padding-right: 10px; /* 给右侧的橙色滚动条留出一点呼吸空间 */
 }
 
 /* 允许终端日志也正常滚动且不穿透 */
@@ -652,13 +657,42 @@ body.pdf-theme {
 .cyber-result-item {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    align-items: center; /* 确保垂直居中 */
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    background: rgba(10, 15, 12, 0.95); /* 【核心修正】：极其深邃的底色，几乎不透明 */
+    backdrop-filter: blur(8px); /* 毛玻璃滤镜，糊掉背后的发光粒子 */
+    border: 1px solid rgba(242, 97, 63, 0.4);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9); /* 【核心修正】：强烈的黑色外阴影，把卡片拔出来 */
 }
-.cyber-result-item:last-child { border-bottom: none; }
 
-.cyber-label { font-size: 0.75rem; opacity: 0.6; letter-spacing: 1px; }
-.cyber-value { font-size: 1.1rem; font-weight: 700; color: #fff; }
+.cyber-result-item:hover {
+    border-color: #00ff00; /* 鼠标放上去变成极客绿 */
+    background: rgba(0, 20, 0, 0.98);
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.cyber-label { font-size: 0.75rem; opacity: 0.6; letter-spacing: 1px; color: #fff; }
+.cyber-value { font-size: 1.1rem; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); } /* 给文字加点黑底阴影防撞色 */
+
+/* ================= 新增：不同平台来源的专属标签 ================= */
+.source-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+/* 用左侧的边框颜色来区分不同的数据源 */
+.source-ncss { border-left: 3px solid #00ff00; }     /* 国家平台：绿色 */
+.source-zhaopin { border-left: 3px solid #00aaff; }  /* 智联招聘：蓝色 */
+.source-wellcee { border-left: 3px solid #a6dfd8; }  /* 唯心所寓：粉色 */
 
 /* ================= 极客实时终端 ================= */
 .cyber-terminal {
@@ -917,3 +951,84 @@ body.pdf-theme {
 .scrollable-code-container pre::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
 .scrollable-code-container pre::-webkit-scrollbar-thumb { background: rgba(242, 97, 63, 0.5); border-radius: 4px; }
 .scrollable-code-container pre::-webkit-scrollbar-thumb:hover { background: rgba(242, 97, 63, 1); }
+
+/* ================= 详情页：主图与更多详情网格 ================= */
+.main-showcase-img {
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1); /* 给主图加一点高级的纸张阴影 */
+}
+
+.more-details-section {
+    margin-top: 80px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* PDF风格的分割线 */
+    padding-top: 40px;
+}
+
+.more-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    color: #111; /* 深灰色标题 */
+}
+
+/* 详情页里的小方块网格，每排2个 */
+.detail-mini-grid {
+    grid-gap: 30px;
+}
+
+/* 强制缩略图容器为特定比例 (4:3)，并在亮色背景下调整边框 */
+.square-visual {
+    aspect-ratio: 4 / 3 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important; /* 亮色主题下的浅色边框 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* 鼠标悬停时的放大与发光效果 (适配详情页亮色背景) */
+.portfolio-item.mini-card:hover .square-visual {
+    border-color: #F2613F !important;
+    box-shadow: 0 15px 35px rgba(242, 97, 63, 0.2) !important;
+    transform: translateY(-8px);
+}
+
+/* ================= 3D 滚动阶段文字样式 ================= */
+.phase-text-container {
+    position: absolute;
+    top: 50%;
+    left: 8vw; /* 靠左放置，给右边的粒子留出呼吸空间 */
+    transform: translateY(-50%);
+    width: 35vw; /* 限制宽度，防止文字拉得太长 */
+    max-width: 500px;
+    z-index: 20;
+    pointer-events: none; /* 防止挡住鼠标的滚动和点击 */
+    opacity: 0; /* 初始状态完全透明 */
+}
+
+.phase-text-container h3 {
+    color: #F2613F; /* 使用你的主题橙色 */
+    font-size: 1rem;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace; /* 极客代码字体 */
+}
+
+.phase-text-container p {
+    color: #F5F5F7;
+    font-size: 1.8rem;
+    line-height: 1.4;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* 手机端适配：屏幕窄时，文字放上面，粒子放下面 */
+@media (max-width: 768px) {
+    .phase-text-container {
+        top: 20%;
+        left: 5vw;
+        width: 90vw;
+    }
+    .phase-text-container p {
+        font-size: 1.2rem;
+    }
+}
