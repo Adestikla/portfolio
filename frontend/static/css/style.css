@@ -306,10 +306,9 @@ body::after {
 
 .rect-grid {
     display: grid;
-    /* 【核心修改】：从 repeat(4, 1fr) 改为 repeat(2, 1fr)，变为每排2个 */
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 60px; /* 稍微拉大间距，让2x2的卡片呼吸感更强 */
-    max-width: 1200px; /* 收缩最大宽度，防止在大屏幕下图片显得过于庞大 */
+    grid-gap: 80px; /* 【配合卡片变大，拉开呼吸间距】从 60px 增加到 80px */
+    max-width: 1600px; /* 【核心放大魔法】：从 1200px 放宽到 1600px，相当于画面直接放大了约 33%！ */
     margin: 0 auto;
 }
 
@@ -317,7 +316,7 @@ body::after {
 .portfolio-item {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px; /* 图文间距微微拉大 */
     text-decoration: none;
     color: var(--text-white);
     cursor: pointer;
@@ -325,7 +324,6 @@ body::after {
 
 /* 单独的图片容器 */
 .portfolio-visual {
-    /* 【核心修改】：强烈建议改为 16/9 (宽图) 或 4/3。这里使用 16/9 更有电影级质感 */
     aspect-ratio: 16 / 9;
     background: rgba(242, 97, 63, 0.02);
     border: 1px solid rgba(242, 97, 63, 0.15);
@@ -352,17 +350,17 @@ body::after {
 
 .portfolio-item:hover .grid-thumb {
     filter: grayscale(0) contrast(1);
-    transform: scale(1.05); /* 鼠标放上去，图片在容器内微微放大，极其丝滑 */
+    transform: scale(1.05);
 }
 
-/* 底部文字排版 */
+/* 底部文字排版 - 同步放大 */
 .portfolio-meta {
     padding: 0 5px;
 }
 
 .portfolio-meta h4 {
-    margin: 0 0 8px 0;
-    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    font-size: 1.6rem; /* 【字号放大】：从 1.2rem 提升到 1.6rem，压住大图的阵脚 */
     font-weight: 700;
     letter-spacing: 0.5px;
     color: var(--text-white);
@@ -370,13 +368,12 @@ body::after {
 }
 
 .portfolio-meta span {
-    font-size: 0.85rem;
+    font-size: 0.95rem; /* 【字号放大】：从 0.85rem 提升到 0.95rem */
     opacity: 0.5;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-/* 悬停时文字微微发亮 */
 .portfolio-item:hover .portfolio-meta h4 {
     color: #F2613F;
 }
@@ -1031,4 +1028,101 @@ body.pdf-theme {
     .phase-text-container p {
         font-size: 1.2rem;
     }
+}
+
+/* ================= 极简版底部带视频的联系模块 ================= */
+.contact-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 100px 0;
+}
+
+.texture-video-wrapper {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+}
+
+.bg-texture-video {
+    position: absolute;
+    top: 50%; left: 50%;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+/* 【核心修改：扒掉高斯模糊，只留极浅的黑底保证白字能看清】 */
+.video-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.15); /* 几乎透明的 15% 黑底 */
+    /* 彻底删除了 backdrop-filter 的高斯模糊！ */
+}
+
+.contact-content-wrapper.minimalist-contact {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.contact-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 20px;
+}
+
+/* 视觉绝对的焦点：排版张力拉满的巨大邮箱 */
+.huge-email {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -2px;
+    margin-bottom: 120px;
+    transition: color 0.4s ease, transform 0.4s ease;
+}
+
+.huge-email:hover {
+    color: var(--accent-orange);
+    transform: translateY(-5px);
+}
+
+.footer-bottom {
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+/* 适配移动端 */
+@media (max-width: 768px) {
+    .huge-email { font-size: 2rem; letter-spacing: 0; }
+    .footer-bottom { flex-direction: column; align-items: center; gap: 20px; }
 }

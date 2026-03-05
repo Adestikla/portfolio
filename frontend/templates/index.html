@@ -2,6 +2,22 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+    </script>
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https://www.transparenttextures.com;
+        media-src 'self';
+        connect-src 'self';
+        object-src 'none';
+    ">
     <title>{{ title | default("Adestikla Portfolio") }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -9,6 +25,55 @@
     <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 禁用 F12 和常见开发者快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || // F12
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67)) || // Ctrl+Shift+I / C
+               (e.ctrlKey && e.keyCode === 85)) { // Ctrl+U (查看源码)
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // ⚠️【注意】：开发阶段请保持注释！上线部署前再把 /* 和 */ 删掉！
+        setInterval(function() {
+            var startTime = performance.now();
+            // 隐蔽触发断点
+            var check = new Function("debugger");
+            check();
+            var endTime = performance.now();
+
+            // 如果断点停留时间超过 100 毫秒，说明对方强行打开了控制台！
+            if (endTime - startTime > 100) {
+                // 1. 网络熔断：掐断所有正在加载的媒体和资源
+                window.stop();
+
+                // 2. 接口阉割：彻底瘫痪浏览器的请求发包能力
+                window.fetch = null;
+                window.XMLHttpRequest = null;
+
+                // 3. 元素爆破：瞬间清空网页，换成黑客警告屏
+                document.documentElement.innerHTML = `
+                    <body style="background-color: #050505; color: #00ff00; height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: 'Courier New', monospace; text-align: center; overflow: hidden;">
+                        <h1 style="font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 15px #00ff00; letter-spacing: 5px;">⚠️ SYSTEM LOCKED</h1>
+                        <p style="font-size: 1.5rem; font-weight: bold; color: #ff4444; letter-spacing: 2px;">本网站禁止一切爬虫、AI 及第三方插件的引用。</p>
+                        <p style="font-size: 1rem; opacity: 0.5; margin-top: 40px; border: 1px solid #00ff00; padding: 10px 20px;">[ DOM Destroyed & Network Terminated ]</p>
+                    </body>
+                `;
+
+                // 【核心修复】：延迟 100 毫秒执行死循环，把主线程让给浏览器，让它有时间把警告屏渲染出来！
+                setTimeout(function() {
+                    while(true) {
+                        debugger;
+                    }
+                }, 100);
+            }
+        }, 500); // 每半秒嗅探一次
+    </script>
 </head>
 <body>
 
@@ -47,20 +112,22 @@
             <div class="work-card directory-card">
                 <div class="glass-container directory-style">
                     <div class="dir-section">
-                        <span>DESIGN STRATEGY</span>
+                        <span>SYSTEM ENGINEERING</span>
                         <ul>
-                            <li>UI/UX Strategy</li>
-                            <li>Visual Identity</li>
-                            <li>Commerce Design</li>
+                            <li>CI/CD Pipeline</li>
+                            <li>Asset Protection</li>
+                            <li>Anti-Scraping Engine</li>
+                            <li>Edge Network & WAF</li>
                         </ul>
                     </div>
+
                     <div class="dir-section">
-                        <span>TECHNICAL ENGINEERING</span>
+                        <span>CREATIVE VISION</span>
                         <ul>
-                            <li>Data Intelligence</li>
-                            <li>Decoupled Architecture</li>
-                            <li>Security Systems</li>
-                            <li>Cloud Operations</li>
+                            <li>Brand Identity</li>
+                            <li>IP Character</li>
+                            <li>Typography & Poster</li>
+                            <li>Lens & Light</li>
                         </ul>
                     </div>
                 </div>
@@ -333,8 +400,26 @@
         </div>
     </section>
 
-    <section class="footer-section">
-        <h2>LET'S CONNECT</h2>
+    <section class="contact-section">
+        <div class="texture-video-wrapper">
+            <video autoplay loop muted playsinline class="bg-texture-video">
+                <source src="/static/video/texture.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <div class="contact-content-wrapper minimalist-contact">
+            <h2 class="contact-subtitle">LET'S CONNECT</h2>
+            <a href="mailto:1502885723@qq.com" class="huge-email">chaichaikunyang@gmail.com</a>
+
+            <div class="footer-bottom">
+                <p>© 2026 ADESTIKLA. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Github</a>
+                    <a href="#">Behance</a>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script>
