@@ -39,65 +39,84 @@ class UniversalScraper:
             try:
                 yield {"type": "log", "msg": f"🌐 [引擎 1] 正在突破: 国家大学生就业网..."}
                 page1 = await context.new_page()
-                await page1.goto("https://www.ncss.cn/", wait_until="domcontentloaded", timeout=15000)
+                await page1.goto("https://www.ncss.cn/", wait_until="domcontentloaded", timeout=20000)
                 await asyncio.sleep(2)
 
+                # 1. 输入关键词并回车
                 search_input = page1.locator('xpath=/html/body/div[2]/div[2]/div/form/div/input')
                 await search_input.fill(keyword)
                 await asyncio.sleep(0.5)
 
                 yield {"type": "log", "msg": f"⏳ 发送查询指令，等待页面跳转..."}
-
-                # ==========================================
-                # 【核心修复】：放弃死等新标签页，兼容同页面跳转
-                # ==========================================
                 await search_input.press("Enter")
-                await asyncio.sleep(3)  # 给网页一点跳转的反应时间
+                await asyncio.sleep(3)
 
-                # 不管它有没有弹新标签页，我们都拿当前最顶层的那个页面操作
+                # 2. 获取当前页面并等待加载
                 active_page = context.pages[-1]
-
-                # 等待 DOM 树加载，如果网卡了最多等 10 秒也不让它崩溃
                 try:
                     await active_page.wait_for_load_state("domcontentloaded", timeout=10000)
-                except Exception:
+                except:
                     pass
-                    # ==========================================
 
-                yield {"type": "log", "msg": f"✅ 结果页加载完毕！准备切换城市..."}
+                    # 3. 切换城市逻辑 (带报错保护)
+                try:
+                    yield {"type": "log", "msg": f"📍 [Debug] 步骤1: 寻找真正的城市下拉框..."}
+                    city_btn = active_page.locator('xpath=//*[@id="searchArea"]').first
+                    await city_btn.wait_for(state="attached", timeout=5000)
 
-                await active_page.mouse.wheel(0, 300)
-                await asyncio.sleep(1.5)
+                    # 坐标点击下拉框
+                    box1 = await city_btn.bounding_box()
+                    if box1:
+                        await active_page.mouse.click(box1["x"] + box1["width"] / 2, box1["y"] + box1["height"] / 2)
+                    else:
+                        await city_btn.click(force=True)
 
-                yield {"type": "log", "msg": f"📍 尝试物理强点，切换区域至: [{clean_city}]..."}
-                city_btn = active_page.locator('#searcharea, xpath=//*[@id="searchBar"]/div[3]').first
+                    yield {"type": "log", "msg": f"✅ [Debug] 步骤1完成！已成功点开下拉框。"}
 
-                if await city_btn.count() > 0:
-                    # 【核心修复】：放弃 JS 注入，改用 Playwright 的物理强点 force=True
-                    await city_btn.click(force=True)
                     await asyncio.sleep(1.5)
 
-                    target_city_loc = active_page.locator(f'#cityDropdown span:has-text("{clean_city}")').first
-                    if await target_city_loc.count() > 0:
-                        # 物理强点选中城市
-                        await target_city_loc.click(force=True)
-                        await asyncio.sleep(1)
+                    yield {"type": "log", "msg": f"📍 [Debug] 步骤2: 在列表中精确狙击 [{clean_city}]..."}
 
-                        yield {"type": "log", "msg": f"🔄 触发二次查询指令，等待区域数据刷新..."}
-                        search_btn_loc = active_page.locator('#jobSearch, xpath=//*[@id="jobSearch"]').first
+                    target_span = active_page.locator(f'#cityDropdown span.areacode:has-text("{clean_city}")').first
+                    await target_span.wait_for(state="attached", timeout=4000)
 
-                        if await search_btn_loc.count() > 0:
-                            # 物理强点搜索按钮
-                            await search_btn_loc.click(force=True)
-                            await asyncio.sleep(4)  # 给它充足的时间去请求后端数据
-                        else:
-                            yield {"type": "log", "msg": f"⚠️ 未找到 NCSS 确认搜索按钮。"}
+                    box2 = await target_span.bounding_box()
+                    if box2:
+                        await active_page.mouse.click(box2["x"] + box2["width"] / 2, box2["y"] + box2["height"] / 2)
                     else:
-                        yield {"type": "log", "msg": f"⚠️ NCSS 未找到对应城市 [{clean_city}]，将使用默认数据。"}
+                        await target_span.click(force=True)
 
-                # 提取数据
+                    yield {"type": "log", "msg": f"✅ [Debug] 步骤2完成！已精准选中城市 [{clean_city}]。"}
+
+                    await asyncio.sleep(1)
+
+                    # 【核心修复1】：模拟键盘敲击 ESC 键，强制关掉那个卡住视野的城市下拉框！
+                    await active_page.keyboard.press("Escape")
+                    await asyncio.sleep(0.5)
+
+                    yield {"type": "log", "msg": f"📍 [Debug] 步骤3: 触发查询并下滑页面..."}
+
+                    # 【核心修复2】：加上更多 class 兜底，确保万无一失抓到搜索按钮
+                    search_btn_loc = active_page.locator('.btn-search, #jobSearch, button:has-text("搜索")').first
+                    await search_btn_loc.wait_for(state="attached", timeout=4000)
+
+                    # 【终极暴破】：用最底层的 JS 直接触发按钮 onclick，无视任何遮挡！
+                    await search_btn_loc.evaluate("node => node.click()")
+
+                    yield {"type": "log", "msg": f"✅ [Debug] 步骤3完成！向下滑动页面，等待 Ajax 异步加载..."}
+
+                    # 【核心修复3】：按照你的建议，立即向下滚动页面，把数据列表滚出来，并等待 5 秒让它完成替换！
+                    await active_page.mouse.wheel(0, 800)
+                    await asyncio.sleep(3)
+                except Exception as e:
+                    error_msg = str(e).split('\n')[0][:60]
+                    yield {"type": "log", "msg": f"⚠️ 城市切换失败! 原因: {error_msg}"}
+                    yield {"type": "log", "msg": f"⚠️ 放弃切换，直接读取当前默认数据兜底。"}
+
+                # 4. 提取数据
                 job_cards = await active_page.locator('xpath=//*[@id="jobLIST"]/*').all()
                 ncss_count = 0
+                exclude_words = ["大专", "专科", "本科", "硕士", "博士", "学历", "不限", "招", "人", "经验"]
 
                 for card in job_cards[:15]:
                     try:
@@ -108,19 +127,11 @@ class UniversalScraper:
                         company = await card.locator('.company-name').first.inner_text()
                         salary = await card.locator('.salary-money').first.inner_text()
 
-                        # 【核心修复】：精准提取带有 "|" 符号的 li 标签内容
-                        job_city = clean_city  # 默认用你搜索的城市兜底
+                        job_city = clean_city
                         li_texts = await card.locator('li').all_inner_texts()
 
-                        # 建立一个“干扰词黑名单”
-                        exclude_words = ["大专", "专科", "本科", "硕士", "博士", "学历", "不限", "招", "人"]
-
                         for text in li_texts:
-                            # 比如 "北京 | 专业不限" -> 切开拿到 "北京"
-                            # 比如 "本科 | 招10人" -> 切开拿到 "本科"
                             left_part = text.split('|')[0].strip()
-
-                            # 如果左半边不是空，且【不包含】任何黑名单里的词，那它就是城市！
                             if left_part and not any(word in left_part for word in exclude_words):
                                 job_city = left_part
                                 break
@@ -129,7 +140,7 @@ class UniversalScraper:
                             "title": title.strip(),
                             "company": company.strip(),
                             "salary": salary.strip(),
-                            "city": job_city,
+                            "city": job_city.strip(),
                             "source": "NCSS 就业网"
                         })
                         ncss_count += 1
@@ -142,7 +153,7 @@ class UniversalScraper:
                 if page1 and not page1.is_closed(): await page1.close()
 
             except Exception as e:
-                yield {"type": "log", "msg": f"⚠️ NCSS 节点访问超时或被拦截，切断连接跳过。"}
+                yield {"type": "log", "msg": f"⚠️ NCSS 节点发生致命异常，跳过。"}
 
             # ==========================================
             # 引擎 2：智联招聘 (降维打击版)

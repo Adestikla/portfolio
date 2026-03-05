@@ -258,10 +258,10 @@ document.addEventListener("DOMContentLoaded", function() {
 # 数据库：存储所有作品集信息
 # ==========================================
 PROJECTS_DB = {
-    # ------ 第 1 章: UI/UX (1-4) 【已全部添加 gallery 结构】 ------
+    # ------ 第 1 章: CORE ARCHITECTURE & SECURITY (本站架构与防护) ------
     1: {
-        "title": "ANCIENT CHINESE<br>PHYSICS", "client": "Studio Adestikla", "role": "UI/UX & Branding", "year": "2025",
-        "text": "这是一次将中国古代物理学理念与现代数字交互相融合的实验性项目。设计不仅关注视觉的冲击力，更深入探讨了东方哲学在赛博空间中的表达器。",
+        "title": "CI/CD<br>PIPELINE", "client": "Personal Project", "role": "Cloud Architecture", "year": "2026",
+        "text": "基于 GitHub + Render 的云原生自动化部署。摒弃了传统的传输模式，打通了“推即部署 (Push-to-Deploy)”的持续交付工作流，保证了核心爬虫引擎与 3D 视觉的零宕机平滑更新。",
         "image": "/static/img/work1.jpg",
         "gallery": [
             "/static/img/work1_detail_1.jpg",
@@ -271,20 +271,19 @@ PROJECTS_DB = {
         ]
     },
     2: {
-        "title": "WEREWOLF<br>CHARACTER", "client": "Personal Project", "role": "Digital Art", "year": "2026",
-        "text": "关于狼人角色的数字艺术创作，重点展示了肌肉纹理与光影的极致刻画。",
+        "title": "FRONTEND<br>SANDBOX", "client": "Personal Project", "role": "Asset Protection", "year": "2026",
+        "text": "多维度的代码防逆向与防扒站“护城河”。全面封锁调试快捷键，在内存中植入动态 Debugger 炸弹抵御恶意调试，并配置防点击劫持机制保护核心 WebGL 资产的归属权。",
         "image": "/static/img/work2.jpg",
         "gallery": [
             "/static/img/work2_detail_1.jpg",
             "/static/img/work2_detail_2.jpg",
             "/static/img/work2_detail_3.jpg",
             "/static/img/work2_detail_4.jpg"
-
         ]
     },
     3: {
-        "title": "NUADU<br>PLATFORM", "client": "Personal Project", "role": "Web Design", "year": "2026",
-        "text": "NUADU 在线教育平台的网页设计重构，提升了暗色模式下的阅读体验和交互反馈。",
+        "title": "ANTI-SCRAPING<br>ENGINE", "client": "Personal Project", "role": "Business Security", "year": "2026",
+        "text": "“以攻促防”的动态反爬虫防御体系。接口层实施严格鉴权与高频限流（Rate Limiting），配合前端渲染阶段的脏数据混淆，有效阻截未经授权的自动化探测脚本与恶意剥离。",
         "image": "/static/img/work3.jpg",
         "gallery": [
             "/static/img/work3_detail_1.jpg",
@@ -294,8 +293,8 @@ PROJECTS_DB = {
         ]
     },
     4: {
-        "title": "SPACE<br>EXPLORER", "client": "Personal Project", "role": "Mobile Interface", "year": "2026",
-        "text": "太空探索主题的移动端 UI 设计，采用了玻璃拟态与 3D 悬浮元素的结合。",
+        "title": "EDGE NETWORK<br>& WAF", "client": "Personal Project", "role": "Boundary Defense", "year": "2026",
+        "text": "依托 Cloudflare 构建的抗 DDoS 与边缘网络护盾。隐藏服务器真实源 IP，在网络边缘层清洗恶意洪水攻击，并利用全球 CDN 节点极限加速大规模 3D 粒子渲染引擎库的加载。",
         "image": "/static/img/work4.jpg",
         "gallery": [
             "/static/img/work4_detail_1.jpg",
@@ -333,8 +332,8 @@ PROJECTS_DB = {
 
     # ------ 第 3 章: DECOUPLED SYSTEM (9-12) 【已全部添加 gallery 结构】 ------
     9: {
-        "title": "CLOUD<br>INFRASTRUCTURE", "client": "Cloudify", "role": "Decoupled System", "year": "2026",
-        "text": "云端解耦架构的管理后台设计，强调操作的严谨性与模块的清晰度。",
+        "title": "BRAND<br>IDENTITY", "client": "柏魅手工饰品", "role": "Brand Designer", "year": "2025",
+        "text": "主导“柏魅”品牌从 0 到 1 的视觉体系搭建。包含品牌标志设计、标准色彩规范及全套 VI 视觉识别系统。将抽象的品牌理念具象化为高辨识度的商业视觉资产，并负责产品宣传海报与包装等核心物料的视觉把控。",
         "image": "/static/img/work9.jpg",
         "gallery": [
             "/static/img/work9_detail_1.jpg",
@@ -344,33 +343,30 @@ PROJECTS_DB = {
         ]
     },
     10: {
-        "title": "MICROSERVICES<br>DASHBOARD", "client": "Cloudify", "role": "Decoupled System", "year": "2026",
-        "text": "微服务监控仪表盘，实时显示各节点的健康状态与流量分发情况。",
+        "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
+        "text": "原创 IP 形象“晓柏”的全链路设计与孵化。通过 Adobe Illustrator 精细的矢量绘图，实现从手绘草图到高精度数字图形的转化。深入探索角色的多维情绪表达，并将其无缝延展至多场景的周边物料设计中。",
         "image": "/static/img/work10.jpg",
         "gallery": [
             "/static/img/work10_detail_1.jpg",
             "/static/img/work10_detail_2.jpg",
             "/static/img/work10_detail_3.jpg",
             "/static/img/work10_detail_4.jpg"
-
         ]
     },
     11: {
-        "title": "SERVERLESS<br>MANAGER", "client": "Cloudify", "role": "Decoupled System", "year": "2026",
-        "text": "无服务器架构的部署与配置界面设计，简化了开发者的发布流程。",
+        "title": "TYPOGRAPHY<br>& POSTER", "client": "Concept Design", "role": "Graphic Designer", "year": "2025",
+        "text": "以“文物”为切入点的字体与海报视觉实验。打破传统排版束缚，将定制化字体设计与现代图形语言相融合。通过高逼真度的 3D 样机渲染（Mockup），精准预演设计在现实物理空间与印刷材质上的最终落地效果。",
         "image": "/static/img/work11.jpg",
         "gallery": [
             "/static/img/work11_detail_1.jpg",
             "/static/img/work11_detail_2.jpg",
             "/static/img/work11_detail_3.jpg",
             "/static/img/work11_detail_4.jpg"
-
         ]
-
     },
     12: {
-        "title": "API<br>GATEWAY", "client": "Cloudify", "role": "Decoupled System", "year": "2026",
-        "text": "API 网关的管理中枢视觉设定，提供了直观的限流与鉴权配置看板。",
+        "title": "LENS<br>& LIGHT", "client": "Photography", "role": "Photographer", "year": "2023-2026",
+        "text": "镜头背后的视觉探索。作为对数字设计的物理延伸，通过摄影捕捉真实世界的光影、几何与空间结构。对色彩分级（Color Grading）与构图的敏锐感知，不仅记录了生活瞬间，更深层次反哺了我在 UI/UX 设计中的审美直觉。",
         "image": "/static/img/work12.jpg",
         "gallery": [
             "/static/img/work12_detail_1.jpg",

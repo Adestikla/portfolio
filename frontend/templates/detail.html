@@ -39,8 +39,8 @@
                 <p class="meta-value">{{ project.year }}</p>
             </div>
             <div class="meta-item">
-                <span class="meta-label">AWARDS</span>
-                <p class="meta-value">Awwwards Nominee</p>
+                <span class="meta-label">AWARDS / TYPE</span>
+                <p class="meta-value">{{ project.awards | default("Independent Work") }}</p>
             </div>
         </div>
 
@@ -50,8 +50,7 @@
             </div>
             <div class="pdf-col-right">
                 <p class="lead-text">{{ project.text }}</p>
-                <p>我们采用了解耦架构与数据智能抓取，确保平台在承载巨量高清 3D 资产的同时，依然能够保持 60fps 的丝滑转场体验。排版上严格遵循了瑞士国际主义风格，克制而精密。</p>
-            </div>
+                </div>
         </main>
 
        <section class="pdf-gallery">
