@@ -278,33 +278,33 @@
     <section class="project-grid-section">
         <div class="rect-grid">
             <a href="/project/5?lang={{ lang }}" class="portfolio-item">
-                <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work5.jpg')"></div></div>
-                <div class="portfolio-meta">
-                    <h4>Core Architecture & WAF</h4>
-                    <span>{{ t.role_2_1 }}</span>
-                </div>
-            </a>
-            <a href="/project/6?lang={{ lang }}" class="portfolio-item">
-                <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work6.jpg')"></div></div>
-                <div class="portfolio-meta">
-                    <h4>Database & Transactions</h4>
-                    <span>{{ t.role_2_2 }}</span>
-                </div>
-            </a>
-            <a href="/project/7?lang={{ lang }}" class="portfolio-item">
-                <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work7.jpg')"></div></div>
-                <div class="portfolio-meta">
-                    <h4>Webhook & Payments</h4>
-                    <span>{{ t.role_2_3 }}</span>
-                </div>
-            </a>
-            <a href="/project/8?lang={{ lang }}" class="portfolio-item">
-                <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work8.jpg')"></div></div>
-                <div class="portfolio-meta">
-                    <h4>Anti-Scraping Engine</h4>
-                    <span>{{ t.role_2_4 }}</span>
-                </div>
-            </a>
+            <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work5.jpg')"></div></div>
+            <div class="portfolio-meta">
+                <h4>{{ t.grid_5 }}</h4>
+                <span>{{ t.role_2_1 }}</span>
+            </div>
+        </a>
+        <a href="/project/6?lang={{ lang }}" class="portfolio-item">
+            <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work6.jpg')"></div></div>
+            <div class="portfolio-meta">
+                <h4>{{ t.grid_6 }}</h4>
+                <span>{{ t.role_2_2 }}</span>
+            </div>
+        </a>
+        <a href="/project/7?lang={{ lang }}" class="portfolio-item">
+            <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work7.jpg')"></div></div>
+            <div class="portfolio-meta">
+                <h4>{{ t.grid_7 }}</h4>
+                <span>{{ t.role_2_3 }}</span>
+            </div>
+        </a>
+        <a href="/project/8?lang={{ lang }}" class="portfolio-item">
+            <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work8.jpg')"></div></div>
+            <div class="portfolio-meta">
+                <h4>{{ t.grid_8 }}</h4>
+                <span>{{ t.role_2_4 }}</span>
+            </div>
+        </a>
         </div>
     </section>
 
@@ -674,7 +674,9 @@ overlay.addEventListener('click', () => {
                 btn.style.opacity = "1";
                 btn.style.pointerEvents = "auto";
             };
-        });
+        }); // 闭合 click 事件
+    } // 闭合 if(btn && input)
+}); // 闭合 DOMContentLoaded 事件
     </script>
 </body>
 </html>
