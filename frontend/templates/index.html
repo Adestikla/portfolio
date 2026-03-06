@@ -18,7 +18,8 @@
         connect-src 'self';
         object-src 'none';
     ">
-    <title>{{ title | default("Adestikla Portfolio") }}</title>
+    <title>Adestikla Portfolio</title>
+    <link rel="icon" href="/static/img/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -76,6 +77,11 @@
     </script>
 </head>
 <body>
+    <div class="lang-switch-container">
+        <a href="/?lang=en" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
+        <span class="lang-divider">/</span>
+        <a href="/?lang=zh" class="lang-btn {% if lang == 'zh' %}active{% endif %}">ZH</a>
+    </div>
 
     <svg style="display:none"><defs><filter id="squiggle"><feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="3" result="noise" /><feDisplacementMap in="SourceGraphic" in2="noise" scale="3" /><animate attributeName="baseFrequency" values="0.2;0.25;0.2" dur="0.2s" repeatCount="indefinite" /></filter></defs></svg>
 
@@ -112,22 +118,22 @@
             <div class="work-card directory-card">
                 <div class="glass-container directory-style">
                     <div class="dir-section">
-                        <span>SYSTEM ENGINEERING</span>
+                        <span>{{ t.dir_title_1 }}</span>
                         <ul>
-                            <li>CI/CD Pipeline</li>
-                            <li>Asset Protection</li>
-                            <li>Anti-Scraping Engine</li>
-                            <li>Edge Network & WAF</li>
+                            <li>{{ t.dir_1_1 }}</li>
+                            <li>{{ t.dir_1_2 }}</li>
+                            <li>{{ t.dir_1_3 }}</li>
+                            <li>{{ t.dir_1_4 }}</li>
                         </ul>
                     </div>
 
                     <div class="dir-section">
-                        <span>CREATIVE VISION</span>
+                        <span>{{ t.dir_title_2 }}</span>
                         <ul>
-                            <li>Brand Identity</li>
-                            <li>IP Character</li>
-                            <li>Typography & Poster</li>
-                            <li>Lens & Light</li>
+                            <li>{{ t.dir_2_1 }}</li>
+                            <li>{{ t.dir_2_2 }}</li>
+                            <li>{{ t.dir_2_3 }}</li>
+                            <li>{{ t.dir_2_4 }}</li>
                         </ul>
                     </div>
                 </div>
@@ -136,10 +142,10 @@
             <div class="work-card quote-card">
                 <div class="glass-container">
                     <div class="about-quote-content">
-                        <p class="main-quote">"Design goes beyond the visual—it’s about solving problems and inspiring emotion."</p>
+                        <p class="main-quote">{{ t.bio_quote }}</p>
                         <div class="signature-box">
                             <img src="/static/img/signature.png" alt="Signature" class="signature-img">
-                            <span>Adestikla, Designer</span>
+                            <span>{{ t.bio_role }}</span>
                         </div>
                     </div>
                 </div>
@@ -153,15 +159,12 @@
                 <div class="avatar-circle">
                     <img src="/static/img/pfp.png" alt="Profile">
                 </div>
-                <div class="personal-info">
-                    <h2 class="name-en">CHAI KUNYANG</h2>
-                    <ul class="info-list">
-                        <li><span>DEGREE</span>Full-time Junior College</li>
-                        <li><span>BIRTHDAY</span>2003.04.10</li>
-                        <li><span>CONTACT</span>+86 19528447410</li>
-                        <li><span>GMAIL</span>chaichaikunyang@gmail.com</li>
-                    </ul>
-                </div>
+                <ul class="info-list">
+                    <li><span>{{ t.bio_label_degree }}</span>{{ t.bio_val_degree }}</li>
+                    <li><span>{{ t.bio_label_birthday }}</span>2003.04.10</li>
+                    <li><span>{{ t.bio_label_contact }}</span>+86 19528447410</li>
+                    <li><span>{{ t.bio_label_gmail }}</span>chaichaikunyang@gmail.com</li>
+                </ul>
             </div>
 
             <div class="qr-container">
@@ -177,39 +180,38 @@
         </div>
 
         <div class="bio-right-projects">
-            <h3 class="section-title">PROJECT EXPERIENCE</h3>
+            <h3 class="section-title">{{ t.exp_title }}</h3>
             <div class="text-projects-column">
 
                 <div class="text-project-block">
                     <div class="tp-content">
-                        <div class="tp-year">2026 // UI/UX & CREATIVE DEV</div>
-                        <h3 class="tp-title">IMMERSIVE 3D PORTFOLIO</h3>
-                        <p class="tp-desc">An interactive web experience featuring smooth GSAP scroll parallax and SVG animations. Built with AI assistance, utilizing a decoupled backend and Cloudflare for optimal performance.</p>
+                        <div class="tp-year">{{ t.exp_1_time }}</div>
+                        <h3 class="tp-title">{{ t.exp_1_title }}</h3>
+                        <p class="tp-desc">{{ t.exp_1_desc }}</p>
                     </div>
-                    <a href="/project/1" class="tp-link">EXPLORE ↗</a>
+                    <a href="/project/1?lang={{ lang }}" class="tp-link">{{ t.exp_explore }}</a>
                 </div>
 
                 <div class="text-project-block">
                     <div class="tp-content">
-                        <div class="tp-year">2025 // FRONT-END & SECURITY</div>
-                        <h3 class="tp-title">SECURE SAAS PLATFORM</h3>
-                        <p class="tp-desc">Front-end architecture and security deployment for a global SaaS tool. Integrated decoupled APIs and configured Cloudflare WAF to ensure secure, high-performance data rendering under NDA.</p>
+                        <div class="tp-year">{{ t.exp_2_time }}</div>
+                        <h3 class="tp-title">{{ t.exp_2_title }}</h3>
+                        <p class="tp-desc">{{ t.exp_2_desc }}</p>
                     </div>
-                    <a href="/project/2" class="tp-link">EXPLORE ↗</a>
+                    <a href="/project/2?lang={{ lang }}" class="tp-link">{{ t.exp_explore }}</a>
                 </div>
 
                 <div class="text-project-block">
                     <div class="tp-content">
-                        <div class="tp-year">2025 // BRAND IDENTITY</div>
-                        <h3 class="tp-title">BOMEI VISUAL SYSTEM</h3>
-                        <p class="tp-desc">A comprehensive visual identity system including logo design, color guidelines, and product packaging. Elevated brand recognition through cohesive and impactful visual storytelling.</p>
+                        <div class="tp-year">{{ t.exp_3_time }}</div>
+                        <h3 class="tp-title">{{ t.exp_3_title }}</h3>
+                        <p class="tp-desc">{{ t.exp_3_desc }}</p>
                     </div>
-                    <a href="/project/3" class="tp-link">EXPLORE ↗</a>
+                    <a href="/project/3?lang={{ lang }}" class="tp-link">{{ t.exp_explore }}</a>
                 </div>
 
             </div>
         </div>
-
     </div>
 </div>
 </div>
@@ -226,81 +228,81 @@
     <section class="project-grid-section">
         <div class="rect-grid">
 
-            <a href="/project/1" class="portfolio-item">
+            <a href="/project/1?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual">
                     <div class="grid-thumb" style="background-image: url('/static/img/work1.jpg')"></div>
                 </div>
                 <div class="portfolio-meta">
-                    <h4>CI/CD Pipeline</h4>
-                    <span>Cloud Architecture</span>
+                    <h4>{{ t.dir_1_1 }}</h4>
+                    <span>{{ t.role_1_1 }}</span>
                 </div>
             </a>
 
-            <a href="/project/2" class="portfolio-item">
+            <a href="/project/2?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual">
                     <div class="grid-thumb" style="background-image: url('/static/img/work2.jpg')"></div>
                 </div>
                 <div class="portfolio-meta">
-                    <h4>Frontend Sandbox</h4>
-                    <span>Asset Protection</span>
+                    <h4>{{ t.dir_1_2 }}</h4>
+                    <span>{{ t.role_1_2 }}</span>
                 </div>
             </a>
 
-            <a href="/project/3" class="portfolio-item">
+            <a href="/project/3?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual">
                     <div class="grid-thumb" style="background-image: url('/static/img/work3.jpg')"></div>
                 </div>
                 <div class="portfolio-meta">
-                    <h4>Anti-Scraping Engine</h4>
-                    <span>Business Security</span>
+                    <h4>{{ t.dir_1_3 }}</h4>
+                    <span>{{ t.role_1_3 }}</span>
                 </div>
             </a>
 
-            <a href="/project/4" class="portfolio-item">
+            <a href="/project/4?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual">
                     <div class="grid-thumb" style="background-image: url('/static/img/work4.jpg')"></div>
                 </div>
                 <div class="portfolio-meta">
-                    <h4>Edge Network & WAF</h4>
-                    <span>Boundary Defense</span>
+                    <h4>{{ t.dir_1_4 }}</h4>
+                    <span>{{ t.role_1_4 }}</span>
                 </div>
             </a>
 
         </div>
     </section>
 
-    <section class="vertical-snap-section" data-snap-text="DATA|INTELLIGENCE|ANALYSIS|SYSTEM">
+    <section class="vertical-snap-section" data-snap-text="VISUAL|DESIGN|CREATIVE|VISION">
         <div class="snap-box"></div>
     </section>
 
     <section class="project-grid-section">
         <div class="rect-grid">
-            <a href="/project/5" class="portfolio-item">
+            <a href="/project/5?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work5.jpg')"></div></div>
                 <div class="portfolio-meta">
                     <h4>Core Architecture & WAF</h4>
-                    <span>Backend Security</span>
+                    <span>{{ t.role_2_1 }}</span>
                 </div>
             </a>
-            <a href="/project/6" class="portfolio-item">
+            <a href="/project/6?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work6.jpg')"></div></div>
                 <div class="portfolio-meta">
                     <h4>Database & Transactions</h4>
-                    <span>Data Persistence</span>
+                    <span>{{ t.role_2_2 }}</span>
                 </div>
             </a>
-            <a href="/project/7" class="portfolio-item">
+            <a href="/project/7?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work7.jpg')"></div></div>
                 <div class="portfolio-meta">
                     <h4>Webhook & Payments</h4>
-                    <span>API Integration</span>
+                    <span>{{ t.role_2_3 }}</span>
                 </div>
             </a>
-            <a href="/project/8" class="portfolio-item">
+            <a href="/project/8?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work8.jpg')"></div></div>
                 <div class="portfolio-meta">
                     <h4>Anti-Scraping Engine</h4>
-                    <span>Frontend Security</span>
+                    <span>{{ t.role_2_4 }}</span>
                 </div>
             </a>
         </div>
@@ -312,32 +314,32 @@
 
     <section class="project-grid-section">
         <div class="rect-grid">
-            <a href="/project/9" class="portfolio-item">
+            <a href="/project/9?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work9.jpg')"></div></div>
                 <div class="portfolio-meta">
-                    <h4>Brand Identity</h4>
-                    <span>Brand Designer</span>
+                    <h4>{{ t.dir_2_1 }}</h4>
+                    <span>{{ t.role_3_1 }}</span>
                 </div>
             </a>
-            <a href="/project/10" class="portfolio-item">
+            <a href="/project/10?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work10.jpg')"></div></div>
                 <div class="portfolio-meta">
-                    <h4>IP Character</h4>
-                    <span>Visual Illustrator</span>
+                    <h4>{{ t.dir_2_2 }}</h4>
+                    <span>{{ t.role_3_2 }}</span>
                 </div>
             </a>
-            <a href="/project/11" class="portfolio-item">
+            <a href="/project/11?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work11.jpg')"></div></div>
                 <div class="portfolio-meta">
-                    <h4>Typography & Poster</h4>
-                    <span>Graphic Designer</span>
+                    <h4>{{ t.dir_2_3 }}</h4>
+                    <span>{{ t.role_3_3 }}</span>
                 </div>
             </a>
-            <a href="/project/12" class="portfolio-item">
+            <a href="/project/12?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual"><div class="grid-thumb" style="background-image: url('/static/img/work12.jpg')"></div></div>
                 <div class="portfolio-meta">
-                    <h4>Lens & Light</h4>
-                    <span>Photographer</span>
+                    <h4>{{ t.dir_2_4 }}</h4>
+                    <span>{{ t.role_3_4 }}</span>
                 </div>
             </a>
         </div>
@@ -352,46 +354,46 @@
             <canvas id="crawler-canvas"></canvas>
 
             <div class="phase-text-container" id="text-phase-1">
-                <h3>STAGE 01 / DATA GATHERING</h3>
-                <p>Deploying automated spiders across the decentralized web to index raw, unstructured data nodes.</p>
+                <h3>{{ t.stage_1_title }}</h3>
+                <p>{{ t.stage_1_desc }}</p>
             </div>
 
             <div class="phase-text-container" id="text-phase-2">
-                <h3>STAGE 02 / NETWORK MAPPING</h3>
-                <p>Constructing relational graphs to identify clusters, security vulnerabilities, and encrypted pathways.</p>
+                <h3>{{ t.stage_2_title }}</h3>
+                <p>{{ t.stage_2_desc }}</p>
             </div>
 
             <div class="phase-text-container" id="text-phase-3">
-                <h3>STAGE 03 / DATA PROCESSING</h3>
-                <p>Filtering noise through decoupled cloud architectures and structuring highly usable intel matrices.</p>
+                <h3>{{ t.stage_3_title }}</h3>
+                <p>{{ t.stage_3_desc }}</p>
             </div>
 
             <div class="crawler-ui-layer">
-                <h2 class="crawler-title" style="opacity: 1;">WEB CRAWLER MATRIX</h2>
-                <p class="crawler-subtitle" style="opacity: 1;">Structuring the Chaos of the Web</p>
+                <h2 class="crawler-title" style="opacity: 1;">{{ t.crawler_title }}</h2>
+                <p class="crawler-subtitle" style="opacity: 1;">{{ t.crawler_subtitle }}</p>
 
                 <div class="crawler-search-box">
                     <select id="engine-select" class="cyber-select" style="width: 140px; border-color: #00ff00; color: #00ff00;">
-                        <option value="job">JOBS (招聘)</option>
-                        <option value="house">HOUSING (租房)</option>
+                        <option value="job">{{ t.opt_job }}</option>
+                        <option value="house">{{ t.opt_house }}</option>
                     </select>
 
-                    <input type="text" id="city-input" placeholder="城市(如: 深圳)" class="cyber-input" style="width: 140px;">
+                    <input type="text" id="city-input" placeholder="{{ t.placeholder_city }}" class="cyber-input" style="width: 140px;">
 
-                    <input type="text" id="crawl-input" placeholder="输入目标 (如: 前端开发 / 南山一室)..." class="cyber-input">
+                    <input type="text" id="crawl-input" placeholder="{{ t.placeholder_target }}" class="cyber-input">
 
                     <select id="edu-select" class="cyber-select">
-                        <option value="不限">不限学历</option>
-                        <option value="大专">大专</option>
-                        <option value="本科">全日制本科</option>
-                        <option value="硕士">硕士及以上</option>
+                        <option value="不限">{{ t.opt_edu_1 }}</option>
+                        <option value="大专">{{ t.opt_edu_2 }}</option>
+                        <option value="本科">{{ t.opt_edu_3 }}</option>
+                        <option value="硕士">{{ t.opt_edu_4 }}</option>
                     </select>
 
-                    <button id="crawl-btn" class="cyber-btn">INITIATE CRAWL</button>
+                    <button id="crawl-btn" class="cyber-btn">{{ t.btn_initiate }}</button>
                 </div>
 
                 <div id="terminal-log" class="cyber-terminal hidden">
-                    <div class="terminal-header">SYS.LOG.STREAM <span style="animation: blink 1s infinite;">_</span></div>
+                    <div class="terminal-header">{{ t.log_title }} <span style="animation: blink 1s infinite;">_</span></div>
                     <div class="terminal-body" id="log-content"></div>
                 </div>
 
@@ -409,7 +411,7 @@
         </div>
 
         <div class="contact-content-wrapper minimalist-contact">
-            <h2 class="contact-subtitle">LET'S CONNECT</h2>
+            <h2 class="contact-subtitle">{{ t.contact_title }}</h2>
             <a href="mailto:1502885723@qq.com" class="huge-email">chaichaikunyang@gmail.com</a>
 
             <div class="footer-bottom">
@@ -565,7 +567,7 @@ overlay.addEventListener('click', () => {
                     const originalText = btn.innerText;
 
                     // UI 状态重置
-                    btn.innerText = "LINK ESTABLISHED...";
+                    btn.innerText = "{{ t.nav_link }}";
                     btn.style.opacity = "0.7";
                     btn.style.pointerEvents = "none";
                     resultsBox.classList.add('hidden');
@@ -573,9 +575,8 @@ overlay.addEventListener('click', () => {
                     // 打开黑客终端
                     terminal.classList.remove('hidden');
                     terminal.style.display = "block";
-                    logContent.innerHTML = '> ESTABLISHING SECURE CONNECTION...<br>';
+                    logContent.innerHTML = '{{ t.log_secure }}<br>';
 
-                    // 【核心修改】：把 engine(引擎), keyword 和 edu 拼接到 URL 传给后端！
                     const targetUrl = `/api/search?engine=${encodeURIComponent(engine)}&city=${encodeURIComponent(city)}&keyword=${encodeURIComponent(keyword)}&edu=${encodeURIComponent(edu)}`;
                     const eventSource = new EventSource(targetUrl);
 
@@ -600,11 +601,11 @@ overlay.addEventListener('click', () => {
 
                             // 如果抓到了真实数据
                             if (parsed.data && parsed.data.length > 0) {
-                                // 1. 改掉死板的头部文案，变成动态多源提示
-                                let htmlContent = `<h4 class="result-header">[ SECURE DATA RETRIEVED | 分布式多节点数据汇编 ]</h4>`;
+                                // 使用字典里的动态多源提示
+                                let htmlContent = `<h4 class="result-header">{{ t.log_retrieved }}</h4>`;
 
                                 parsed.data.forEach(item => {
-                                    // 2. 根据来源名称，动态分配样式类
+                                    // 根据来源名称，动态分配样式类
                                     let sourceClass = "source-badge";
                                     let sourceName = item.source || "未知节点";
                                     if (sourceName.includes("NCSS") || sourceName.includes("国家")) sourceClass += " source-ncss";
@@ -612,23 +613,23 @@ overlay.addEventListener('click', () => {
                                     else if (sourceName.includes("Wellcee")) sourceClass += " source-wellcee";
                                     else sourceClass += " source-ncss"; // 兜底颜色
 
-                                    // 3. 将标签加入到 HTML 结构中 (新增了第 4 列)
+                                    // 【修复 3】：使用内联 Jinja 语法处理标签，
                                     htmlContent += `
                                         <div class="cyber-result-item">
                                             <div style="flex: 2;">
-                                                <div class="cyber-label">COMPANY</div>
+                                                <div class="cyber-label">{% if lang == 'zh' %}公司{% else %}COMPANY{% endif %}</div>
                                                 <div class="cyber-value">${item.company}</div>
                                             </div>
                                             <div style="flex: 2;">
-                                                <div class="cyber-label">POSITION</div>
+                                                <div class="cyber-label">{% if lang == 'zh' %}职位{% else %}POSITION{% endif %}</div>
                                                 <div class="cyber-value">${item.title}</div>
                                             </div>
                                             <div style="flex: 1.2;">
-                                                <div class="cyber-label">LOCATION</div>
+                                                <div class="cyber-label">{% if lang == 'zh' %}地点{% else %}LOCATION{% endif %}</div>
                                                 <div class="cyber-value">${item.city || '未知'}</div>
                                             </div>
                                             <div style="flex: 1;">
-                                                <div class="cyber-label">SALARY</div>
+                                                <div class="cyber-label">{% if lang == 'zh' %}薪资{% else %}SALARY{% endif %}</div>
                                                 <div class="cyber-value">${item.salary}</div>
                                             </div>
                                             <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center;">
@@ -641,39 +642,38 @@ overlay.addEventListener('click', () => {
                                 resultsBox.innerHTML = htmlContent;
                                 resultsBox.classList.remove('hidden');
 
-                                // 恢复按钮状态
-                                btn.innerText = originalText;
-                                btn.style.opacity = "1";
-                                btn.style.pointerEvents = "auto";
+                            // 恢复按钮状态
+                            btn.innerText = originalText;
+                            btn.style.opacity = "1";
+                            btn.style.pointerEvents = "auto";
 
-                                // 3秒后自动隐藏控制台日志
-                                setTimeout(() => {
-                                    terminal.classList.add('hidden');
-                                    setTimeout(() => { terminal.style.display = "none"; }, 300);
-                                }, 3000);
-                            } else {
-                                // 【核心修改】：如果没有抓到数据（爬虫被拦截或报错了）
-                                // 按钮标红，并且不要隐藏终端！
-                                btn.innerText = "CRAWL FAILED / RETRY";
-                                btn.style.opacity = "1";
-                                btn.style.background = "#ff4444"; // 变红警示
-                                btn.style.pointerEvents = "auto";
+                            // 3秒后自动隐藏控制台日志
+                            setTimeout(() => {
+                                terminal.classList.add('hidden');
+                                setTimeout(() => { terminal.style.display = "none"; }, 300);
+                            }, 3000);
+                        } else {
+                            // 【修复 4】：如果没有抓到数据，使用字典里的失败按钮文字
+                            btn.innerText = "{{ t.btn_failed }}";
+                            btn.style.opacity = "1";
+                            btn.style.background = "#ff4444"; // 变红警示
+                            btn.style.pointerEvents = "auto";
 
-                                logContent.innerHTML += `<div class="log-warn">> [SYSTEM HALTED] 数据流中断，未能抓取到有效节点。</div>`;
-                                logContent.scrollTop = logContent.scrollHeight;
-                            }
+                            // 【修复 5】：使用字典里的系统熔断警告
+                            logContent.innerHTML += `<div class="log-warn">{{ t.log_halted }}</div>`;
+                            logContent.scrollTop = logContent.scrollHeight;
                         }
-                    };
+                    }
+                };
 
-                    eventSource.onerror = function() {
-                        eventSource.close();
-                        logContent.innerHTML += `<div class="log-warn">> [FATAL ERROR] CONNECTION LOST</div>`;
-                        btn.innerText = "RETRY CRAWL";
-                        btn.style.opacity = "1";
-                        btn.style.pointerEvents = "auto";
-                    };
-                });
-            }
+            eventSource.onerror = function() {
+                eventSource.close();
+                // 顺手把这里的底层错误也双语化了！
+                logContent.innerHTML += `<div class="log-warn">{% if lang == 'zh' %}> [致命错误] 连接已断开{% else %}> [FATAL ERROR] CONNECTION LOST{% endif %}</div>`;
+                btn.innerText = "{{ t.btn_failed }}";
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "auto";
+            };
         });
     </script>
 </body>

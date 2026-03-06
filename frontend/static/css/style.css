@@ -1126,3 +1126,68 @@ body.pdf-theme {
     .huge-email { font-size: 2rem; letter-spacing: 0; }
     .footer-bottom { flex-direction: column; align-items: center; gap: 20px; }
 }
+
+/* ================= 终极版：右侧悬浮赛博发光切换器 ================= */
+.lang-switch-container {
+    position: fixed; /* 始终悬浮于整个画面之上 */
+    top: 40px;
+    right: 50px;     /* 固定在右上角 */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    /* 圆角矩形与毛玻璃质感 */
+    background: rgba(18, 21, 23, 0.65); /* 极暗的透明底色，融入背景 */
+    padding: 10px 20px;
+    border-radius: 50px; /* 完美的圆角胶囊形状 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    z-index: 9999; /* 保证永远在最顶层 */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 整个矩形的悬浮发光特效 */
+.lang-switch-container:hover {
+    border-color: rgba(242, 97, 63, 0.4); /* 边框变成半透明主题橙 */
+    background: rgba(18, 21, 23, 0.85);
+    box-shadow: 0 0 25px rgba(242, 97, 63, 0.25), /* 外发光 */
+                inset 0 0 10px rgba(242, 97, 63, 0.1); /* 内发光 */
+    transform: translateY(-2px); /* 微微上浮 */
+}
+
+.lang-btn {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+/* 鼠标悬停在字母上时变亮 */
+.lang-btn:hover {
+    color: #ffffff;
+}
+
+/* 当前激活语言的高亮 + 赛博霓虹文字阴影 */
+.lang-btn.active {
+    color: var(--accent-orange);
+    text-shadow: 0 0 12px rgba(242, 97, 63, 0.8);
+}
+
+.lang-divider {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.9rem;
+    user-select: none; /* 防止鼠标选中斜杠 */
+}
+
+/* 适配手机端：微调位置防止太靠边 */
+@media (max-width: 768px) {
+    .lang-switch-container {
+        top: 25px;
+        right: 25px;
+        padding: 8px 16px;
+    }
+}

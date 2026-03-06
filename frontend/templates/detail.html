@@ -18,7 +18,7 @@
         connect-src 'self';
         object-src 'none';
     ">
-    <title>Project Detail - Adestikla</title>
+    <title>{{ t.title_detail }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
     <script>
@@ -73,7 +73,7 @@
     </head>
 <body class="pdf-theme">
     <nav class="pdf-nav">
-        <a href="/" class="back-btn">← BACK TO INDEX</a>
+        <a href="/?lang={{ lang }}" class="back-btn">{{ t.btn_back }}</a>
         <span>0{{ current_index }} / 04</span>
     </nav>
 
@@ -81,7 +81,7 @@
     {% if is_last %}
         <a href="/">END OF SECTION (BACK TO INDEX) →</a>
     {% else %}
-        <a href="/project/{{ next_id }}">NEXT PROJECT →</a>
+        <a href="/project/{{ next_id }}?lang={{ lang }}" class="next-btn">{{ t.next_project }}</a>
     {% endif %}
 </footer>
 
@@ -92,26 +92,26 @@
 
         <div class="pdf-meta">
             <div class="meta-item">
-                <span class="meta-label">CLIENT</span>
+                <span class="meta-label">{{ t.meta_client }}</span>
                 <p class="meta-value">{{ project.client }}</p>
             </div>
             <div class="meta-item">
-                <span class="meta-label">ROLE</span>
+                <span class="meta-label">{{ t.meta_role }}</span>
                 <p class="meta-value">{{ project.role }}</p>
             </div>
             <div class="meta-item">
-                <span class="meta-label">YEAR</span>
+                <span class="meta-label">{{ t.meta_year }}</span>
                 <p class="meta-value">{{ project.year }}</p>
             </div>
             <div class="meta-item">
-                <span class="meta-label">AWARDS / TYPE</span>
-                <p class="meta-value">{{ project.awards | default("Independent Work") }}</p>
+                <span class="meta-label">{{ t.meta_awards }}</span>
+                <p class="meta-value">{{ project.awards | default(t.default_awards)}}</p>
             </div>
         </div>
 
         <main class="pdf-body">
             <div class="pdf-col-left">
-                <h2>PROJECT<br>OVERVIEW</h2>
+                <h2>{{ t.project_overview | safe }}</h2>
             </div>
             <div class="pdf-col-right">
                 <p class="lead-text">{{ project.text }}</p>
@@ -135,7 +135,7 @@
 
             {% if project.gallery %}
                 <div class="more-details-section">
-                    <h3 class="more-title">EXPLORE MORE</h3>
+                    <h3 class="more-title">{{ t.explore_more }}</h3>
                     <div class="rect-grid detail-mini-grid">
                         {% for img_path in project.gallery %}
                             <div class="portfolio-item mini-card">
@@ -151,9 +151,9 @@
 
         <footer class="pdf-footer">
             {% if is_last %}
-                <a href="/">END OF SECTION (BACK TO INDEX) →</a>
+                <a href="/?lang={{ lang }}">{{ t.end_section }}</a>
             {% else %}
-                <a href="/project/{{ next_id }}">NEXT PROJECT →</a>
+                <a href="/project/{{ next_id }}?lang={{ lang }}">{{ t.next_project }}</a>
             {% endif %}
         </footer>
     </div>
