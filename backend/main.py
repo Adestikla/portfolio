@@ -46,7 +46,7 @@ async def get_data(request: Request, engine: str = "job", city: str = "深圳", 
                 async for chunk in scraper.fetch_data_stream(keyword):
                     await queue.put(chunk)
             else:
-                scraper = UniversalScraper(headless=False)
+                scraper = UniversalScraper(headless=True)
                 # 招聘爬虫传入 keyword, edu 和 city
                 async for chunk in scraper.fetch_data_stream(keyword, edu, city):
                     await queue.put(chunk)
@@ -268,7 +268,7 @@ PROJECTS_ZH = {
     # ------ 第 1 章: CORE ARCHITECTURE & SECURITY (本站架构与防护) ------
     1: {
         "grid_title": "CI/CD Pipeline",
-        "title": "CI/CD<br>PIPELINE", "client": "个人项目", "role": "云架构", "year": "2026",
+        "title": "CI/CD<br>PIPELINE", "client": "Personal Project", "role": "Cloud Architecture", "year": "2026",
         "text": "基于 GitHub + Render 的云原生自动化部署。摒弃了传统的传输模式，打通了“推即部署 (Push-to-Deploy)”的持续交付工作流，保证了核心爬虫引擎与 3D 视觉的零宕机平滑更新。",
         "image": "/static/img/work1.jpg",
         "gallery": [
@@ -280,7 +280,7 @@ PROJECTS_ZH = {
     },
     2: {
         "grid_title": "CI/CD Pipeline",
-        "title": "FRONTEND<br>SANDBOX", "client": "个人项目", "role": "资产保护", "year": "2026",
+        "title": "FRONTEND<br>SANDBOX", "client": "Personal Project", "role": "Asset Protection", "year": "2026",
         "text": "多维度的代码防逆向与防扒站“护城河”。全面封锁调试快捷键，在内存中植入动态 Debugger 炸弹抵御恶意调试，并配置防点击劫持机制保护核心 WebGL 资产的归属权。",
         "image": "/static/img/work2.jpg",
         "gallery": [
@@ -292,7 +292,7 @@ PROJECTS_ZH = {
     },
     3: {
         "grid_title": "CI/CD Pipeline",
-        "title": "ANTI-SCRAPING<br>ENGINE", "client": "个人项目", "role": "业务安全", "year": "2026",
+        "title": "ANTI-SCRAPING<br>ENGINE", "client": "Personal Project", "role": "Business Security", "year": "2026",
         "text": "“以攻促防”的动态反爬虫防御体系。接口层实施严格鉴权与高频限流（Rate Limiting），配合前端渲染阶段的脏数据混淆，有效阻截未经授权的自动化探测脚本与恶意剥离。",
         "image": "/static/img/work3.jpg",
         "gallery": [
@@ -304,7 +304,7 @@ PROJECTS_ZH = {
     },
     4: {
         "grid_title": "CI/CD Pipeline",
-        "title": "EDGE NETWORK<br>& WAF", "client": "个人项目", "role": "边界防御", "year": "2026",
+        "title": "EDGE NETWORK<br>& WAF", "client": "Personal Project", "role": "Boundary Defense", "year": "2026",
         "text": "依托 Cloudflare 构建的抗 DDoS 与边缘网络护盾。隐藏服务器真实源 IP，在网络边缘层清洗恶意洪水攻击，并利用全球 CDN 节点极限加速大规模 3D 粒子渲染引擎库的加载。",
         "image": "/static/img/work4.jpg",
         "gallery": [
@@ -318,37 +318,37 @@ PROJECTS_ZH = {
     # ------ 第 2 章: DATA INTELLIGENCE & SECURITY (5-8) 【代码展示组】 ------
     5: {
         "grid_title": "CI/CD Pipeline",
-        "title": "CORE ARCHITECTURE<br>& WAF", "client": "保密级 SaaS", "role": "后端安全", "year": "2025",
+        "title": "CORE ARCHITECTURE<br>& WAF", "client": "Confidential SaaS", "role": "Backend Security", "year": "2025",
         "text": "实施了严格的 CSP 策略、环境指纹校验以及 API 接口的三重鉴权，确保服务端固若金汤。",
         "code": CODE_APP_PY,
         "filename": "app.py"
     },
     6: {
         "grid_title": "CI/CD Pipeline",
-        "title": "DATABASE &<br>TRANSACTIONS", "client": "保密级 SaaS", "role": "数据持久化", "year": "2025",
+        "title": "DATABASE &<br>TRANSACTIONS", "client": "Confidential SaaS", "role": "Data Persistence", "year": "2025",
         "text": "处理数据库兼容性，管理连接池及确保高并发下的核心资产发放原子化交易安全。",
         "code": CODE_DB_PY,
         "filename": "database.py"
     },
     7: {
         "grid_title": "CI/CD Pipeline",
-        "title": "WEBHOOK &<br>PAYMENTS", "client": "保密级 SaaS", "role": "API 集成", "year": "2025",
+        "title": "WEBHOOK &<br>PAYMENTS", "client": "Confidential SaaS", "role": "API Integration", "year": "2025",
         "text": "使用 FastAPI 异步处理高并发的第三方 Webhook（Stripe），并严格验证数字签名防御伪造请求。",
         "code": CODE_WEBHOOK,
         "filename": "webhook_server.py"
     },
     8: {
         "grid_title": "CI/CD Pipeline",
-        "title": "ANTI-SCRAPING<br>ENGINE", "client": "保密级 SaaS", "role": "前端安全", "year": "2025",
+        "title": "ANTI-SCRAPING<br>ENGINE", "client": "Confidential SaaS", "role": "Frontend Security", "year": "2025",
         "text": "部署了复杂的 JavaScript 调试器陷阱（Debugger Trap）与 DOM 动态混淆，有效抵御自动化爬虫。",
         "code": CODE_JS_SEC,
         "filename": "security.js"
     },
 
-    # ------ 第 3 章: DECOUPLED SYSTEM (9-12) ------
+    # ------ 第 3 章: DECOUPLED SYSTEM (9-12) 【已全部添加 gallery 结构】 ------
     9: {
         "grid_title": "CI/CD Pipeline",
-        "title": "BRAND<br>IDENTITY", "client": "柏魅手工饰品", "role": "品牌设计师", "year": "2025",
+        "title": "BRAND<br>IDENTITY", "client": "柏魅手工饰品", "role": "Brand Designer", "year": "2025",
         "text": "主导“柏魅”品牌从 0 到 1 的视觉体系搭建。包含品牌标志设计、标准色彩规范及全套 VI 视觉识别系统。将抽象的品牌理念具象化为高辨识度的商业视觉资产，并负责产品宣传海报与包装等核心物料的视觉把控。",
         "image": "/static/img/work9.jpg",
         "gallery": [
@@ -360,7 +360,7 @@ PROJECTS_ZH = {
     },
     10: {
         "grid_title": "CI/CD Pipeline",
-        "title": "IP<br>CHARACTER", "client": "个人项目", "role": "视觉插画师", "year": "2025",
+        "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
         "text": "原创 IP 形象“晓柏”的全链路设计与孵化。通过 Adobe Illustrator 精细的矢量绘图，实现从手绘草图到高精度数字图形的转化。深入探索角色的多维情绪表达，并将其无缝延展至多场景的周边物料设计中。",
         "image": "/static/img/work10.jpg",
         "gallery": [
@@ -372,7 +372,7 @@ PROJECTS_ZH = {
     },
     11: {
         "grid_title": "CI/CD Pipeline",
-        "title": "TYPOGRAPHY<br>& POSTER", "client": "概念设计", "role": "平面设计师", "year": "2025",
+        "title": "TYPOGRAPHY<br>& POSTER", "client": "Concept Design", "role": "Graphic Designer", "year": "2025",
         "text": "以“文物”为切入点的字体与海报视觉实验。打破传统排版束缚，将定制化字体设计与现代图形语言相融合。通过高逼真度的 3D 样机渲染（Mockup），精准预演设计在现实物理空间与印刷材质上的最终落地效果。",
         "image": "/static/img/work11.jpg",
         "gallery": [
@@ -384,7 +384,7 @@ PROJECTS_ZH = {
     },
     12: {
         "grid_title": "CI/CD Pipeline",
-        "title": "LENS<br>& LIGHT", "client": "独立摄影", "role": "摄影师", "year": "2023-2026",
+        "title": "LENS<br>& LIGHT", "client": "Photography", "role": "Photographer", "year": "2023-2026",
         "text": "镜头背后的视觉探索。作为对数字设计的物理延伸，通过摄影捕捉真实世界的光影、几何与空间结构。对色彩分级（Color Grading）与构图的敏锐感知，不仅记录了生活瞬间，更深层次反哺了我在 UI/UX 设计中的审美直觉。",
         "image": "/static/img/work12.jpg",
         "gallery": [
@@ -635,10 +635,6 @@ I18N_DB = {
         "role_3_2": "视觉插画师",
         "role_3_3": "平面设计师",
         "role_3_4": "摄影师",
-        "grid_5": "核心架构与 WAF",
-        "grid_6": "数据库与事务",
-        "grid_7": "Webhook 与支付",
-        "grid_8": "前端反爬引擎",
 
         # 7. 3D 爬虫演示与交互终端
         "snap_4": "赛博|安全|爬虫|网络",
@@ -706,10 +702,6 @@ I18N_DB = {
         "dir_2_2": "IP Character",
         "dir_2_3": "Typography & Poster",
         "dir_2_4": "Lens & Light",
-        "grid_5": "Core Architecture & WAF",
-        "grid_6": "Database & Transactions",
-        "grid_7": "Webhook & Payments",
-        "grid_8": "Anti-Scraping Engine",
 
         # 4. Bio & Quote
         "bio_quote": "\"Design goes beyond the visual—it’s about solving problems and inspiring emotion.\"",
