@@ -477,6 +477,9 @@ body.pdf-theme {
 .pdf-footer a { color: #111; text-decoration: none; transition: color 0.3s; }
 .pdf-footer a:hover { color: #F2613F; /* 悬停时透出你的主色调落日橙 */ }
 
+/* PC端隐藏静态插图 */
+.mobile-only-img { display: none; }
+
 /* 响应式调整 (手机端) */
 @media (max-width: 768px) {
     .pdf-meta { grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -1183,11 +1186,654 @@ body.pdf-theme {
     user-select: none; /* 防止鼠标选中斜杠 */
 }
 
-/* 适配手机端：微调位置防止太靠边 */
-@media (max-width: 768px) {
-    .lang-switch-container {
-        top: 25px;
-        right: 25px;
-        padding: 8px 16px;
+/* ==========================================
+   移动端专属结界 (PC端绝对免疫)
+   ========================================== */
+    @media screen and (max-width: 768px) {
+
+
+
+    /* 1. 终极修复：大字适配与“悬浮呼吸”动效 */
+    .reveal-title {
+        position: absolute !important;
+        left: 0 !important;
+        width: 100vw !important;
+        white-space: normal !important;
+        text-align: center !important;
+        font-size: 10vw !important; /* 调整为精致的10vw */
+        line-height: 1.1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        top: 42% !important; /* 稍微往上抬一点点 */
+        animation: floatTitle 3.5s infinite alternate ease-in-out 2s !important;
     }
+
+    @keyframes floatTitle {
+        0% { top: 42%; }
+        100% { top: 38%; } /* 向上悬浮 4% 的距离 */
+    }
+
+    .reveal-subtitle {
+        position: absolute !important;
+        left: 0 !important;
+        width: 100vw !important;
+        text-align: center !important;
+        font-size: 1rem !important;
+        letter-spacing: 0.2em !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        bottom: 25% !important;
+        animation: floatSub 3.5s infinite alternate ease-in-out 2s !important;
+    }
+
+    @keyframes floatSub {
+        0% { bottom: 25%; }
+        100% { bottom: 21%; } /* 向下沉 4% 的距离 */
+    }
+
+    /* 2. 隐藏人物，背景呼吸 */
+    .layer-figure {
+        display: none !important;
+    }
+
+    .layer-bg {
+        background-position: center center !important;
+        background-size: cover !important;
+        animation: bgBreathe 8s infinite alternate ease-in-out !important;
+    }
+
+    @keyframes bgBreathe {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.15); }
+    }
+
+    /* 3. 放大右上角语言切换按钮 */
+    .lang-switch-container {
+        top: 25px !important;
+        right: 20px !important;
+        padding: 12px 24px !important;
+        transform: scale(1.15);
+        transform-origin: top right;
+    }
+
+    .lang-btn {
+        font-size: 1.2rem !important;
+    }
+
+    .lang-divider {
+        font-size: 1.2rem !important;
+    }
+
+    /* 4. 底部爬虫区的静态背景 (替代 3D 黑洞) */
+    .mobile-static-crawler {
+        background: radial-gradient(circle at center, #1a1e21 0%, #000000 100%);
+        position: relative;
+    }
+
+    /* --------------------------------------
+       5. 中间 3 个大模块：自由上下滑 + 内部左右抽卡
+       -------------------------------------- */
+    .horizontal-scroll-section {
+        height: auto !important; /* 解除高度限制，允许上下自由滑动 */
+        padding: 50px 0 !important;
+        position: relative;
+    }
+
+    /* 底部“滑动提示文字”与闪烁动画 */
+    .horizontal-scroll-section::after {
+        content: "← SWIPE TO EXPLORE →";
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        pointer-events: none;
+        animation: pulseSwipeHint 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseSwipeHint {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.8; }
+    }
+
+    .horizontal-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100vw !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+
+        /* 👇 修改这里：把第一项的 0 改成 30px，给顶部光晕留出呼吸空间 */
+        padding: 30px 5vw 40px 5vw !important;
+
+        gap: 15px !important;
+    }
+
+    .horizontal-wrapper::-webkit-scrollbar { display: none; }
+
+    /* 修复全屏闪烁大字（PIPELINE / VISION 等）上下黑边太长 */
+    .vertical-snap-section {
+        height: 40vh !important; /* 【核心修改】：从 100vh 压缩为 40vh，让页面更紧凑 */
+        min-height: 300px !important;
+    }
+
+    /* 重置三大卡片的尺寸 */
+    .work-card {
+        flex: 0 0 88vw !important;
+        width: 88vw !important;
+        height: 65vh !important; /* 【核心修改】：固定为屏幕高度的 65%，让它们一样大 */
+        min-height: 450px !important; /* 保底高度 */
+        max-height: 600px !important; /* 限制最高高度 */
+        scroll-snap-align: center !important;
+    }
+
+    /* 【核心魔法】：让卡片内部可以独立滑动，并阻止滑动穿透 */
+    .work-card .glass-container {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior-y: contain !important; /* 划到底时，网页不会跟着往下跑，锁死在卡片内 */
+    }
+
+    /* 美化并隐藏卡片内部的滚动条，保持赛博风的干净 */
+    .work-card .glass-container::-webkit-scrollbar {
+        width: 4px !important;
+    }
+    .work-card .glass-container::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .work-card .glass-container::-webkit-scrollbar-thumb {
+        background: rgba(242, 97, 63, 0.3) !important;
+        border-radius: 4px !important;
+    }
+
+    /* 重置卡片内部排版 */
+    .directory-style {
+        padding: 30px !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+    .about-quote-content { padding: 30px !important; }
+    .main-quote { font-size: 1.8rem !important; margin-bottom: 20px !important; }
+
+    .bio-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 25px !important;
+        gap: 20px !important;
+        overflow-y: auto !important;
+    }
+    .bio-left { align-items: center; text-align: center; }
+    .avatar-circle { width: 120px !important; height: 120px !important; margin: 0 auto 15px !important; }
+    .qr-container { justify-content: center !important; margin-top: 20px !important; }
+
+    /* --------------------------------------
+       6. 作品集 12 个网格：从堆叠变成“横向滑动抽卡”
+       -------------------------------------- */
+    .rect-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 30px !important; /* 【核心修改】：卡片之间的上下间距从 50px 缩小到 30px */
+        padding: 10px 5vw 40px 5vw !important; /* 顶部预留稍微变小一点 */
+        overflow: visible !important;
+    }
+
+    .portfolio-item {
+        width: 100% !important;
+        height: auto !important;
+        flex: none !important;
+        scroll-snap-align: none !important;
+        gap: 12px !important; /* 【核心修改】：图片与下方标题的间距从 24px 缩小到 12px */
+    }
+
+    /* 保证单列状态下，图片的比例完美展示 */
+    .portfolio-item .portfolio-visual {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9; /* 保持绝佳的宽银幕比例 */
+    }
+
+    /* ==========================================
+       Section: 3D 爬虫响应式优化 (手机端专属)
+       ========================================== */
+
+    /* 1. 全局控制：PC端结构隐藏，移动端卡片容器显示 */
+    .pc-only-container { display: none !important; }
+    .mobile-only-container { display: flex !important; }
+
+    /* 2. 重置父容器：关闭 sticky 效果，取消 600vh 的超长空白 */
+    .crawler-3d-section {
+        position: relative !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: transparent;
+        padding-bottom: 60px;
+    }
+
+    /* --------------------------------------
+       3. 移动端爬虫区：实现横向滑动毛玻璃卡片
+       -------------------------------------- */
+    .crawler-mobile-flex-container {
+        align-items: center !important;
+        position: relative !important;
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100vw !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 20px 5vw 40px 5vw !important;
+        gap: 20px !important;
+        box-sizing: border-box !important;
+        z-index: 10;
+    }
+
+    .crawler-mobile-flex-container::-webkit-scrollbar { display: none; }
+
+    /* 4. 每一个阶段的文字和最终UI，变成一张毛玻璃质感卡片 */
+    .phase-text-container, .crawler-ui-layer {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        flex: 0 0 88vw !important;
+        width: 88vw !important;
+
+        /* 🌟 核心修复：锁死卡片高度！这就是内部滑动的前提 */
+        height: 70vh !important;         /* 占屏幕 70% 高度 */
+        max-height: 650px !important;    /* 最高不超过 650px */
+        min-height: 480px !important;    /* 最矮不低于 480px */
+        overflow-y: auto !important;     /* 内容超出时开启上下滚动 */
+        overflow-x: hidden !important;
+        overscroll-behavior-y: contain !important; /* 🌟 神级属性：卡片滑到底时，绝不带着整个网页一起跑！ */
+
+        border-radius: 20px;
+        scroll-snap-align: center !important;
+        background: rgba(18, 21, 23, 0.75) !important;
+        border: 1px solid rgba(242, 97, 63, 0.3) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        padding: 40px 30px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    /* 单独让最后一个控制台面板居中，且剥离厚重底色 */
+    .crawler-ui-layer {
+        align-items: center !important;
+        background: rgba(18, 21, 23, 0.2) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        border: 1px solid rgba(242, 97, 63, 0.5) !important;
+        padding-top: 40px !important;
+        padding-bottom: 40px !important; /* 保证底部留白，滑到底部好看 */
+    }
+
+    /* 🌟 新增：定制卡片内部的高级隐形滚动条 */
+    .phase-text-container::-webkit-scrollbar,
+    .crawler-ui-layer::-webkit-scrollbar {
+        width: 4px !important;
+    }
+    .phase-text-container::-webkit-scrollbar-track,
+    .crawler-ui-layer::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+    .phase-text-container::-webkit-scrollbar-thumb,
+    .crawler-ui-layer::-webkit-scrollbar-thumb {
+        background: rgba(242, 97, 63, 0.4) !important;
+        border-radius: 4px !important;
+    }
+
+    /* 5. 展现手机专属抠图 PNG */
+    .mobile-only-img {
+        display: block !important;
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: contain;
+        margin-top: auto; /* 把图片挤到卡片最下面 */
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+    }
+
+    /* --------------------------------------
+       🚨 修复：手机端卡片放大后的高度压迫与重叠
+       -------------------------------------- */
+    .overlay-content-host.expanded-view {
+        width: 90vw !important;
+        height: 80vh !important;
+        max-height: 80vh !important;
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        background: #121517 !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
+    }
+
+    .expanded-view .bio-layout,
+    .expanded-view .directory-style,
+    .expanded-view .about-quote-content {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        padding: 10px !important;
+        gap: 20px !important;
+        overflow: visible !important;
+    }
+
+    .expanded-view .bio-left,
+    .expanded-view .bio-right-projects {
+        width: 100% !important;
+        height: auto !important;
+        flex: none !important;
+    }
+
+    /* 🎯 文字极限瘦身：绝对精致小巧 */
+    .expanded-view * { white-space: normal !important; }
+    .expanded-view .dir-section span { font-size: 0.7rem !important; letter-spacing: 2px !important; margin-bottom: 10px !important; }
+    .expanded-view .dir-section li { font-size: 1rem !important; margin-bottom: 12px !important; line-height: 1.3 !important; }
+    .expanded-view .tp-title { font-size: 0.95rem !important; margin-bottom: 5px !important;}
+    .expanded-view .main-quote { font-size: 1.1rem !important; line-height: 1.4 !important; }
+    .expanded-view .name-en { font-size: 1.4rem !important; }
+    .expanded-view .qr-item { width: 90px !important; height: 90px !important; }
+    .expanded-view .qr-item img { width: 50px !important; height: 50px !important; padding: 4px !important;}
+
+    /* --------------------------------------
+       🚨 柔化：手机端小方块（作品集）的生硬发光
+       -------------------------------------- */
+    /* 手机端干掉生硬边框，改成极其微弱的弥散薄雾光 */
+    .portfolio-item:hover .portfolio-visual,
+    .portfolio-item:active .portfolio-visual {
+        transform: translateY(-6px) !important; /* 恢复适度的上浮感，统一手感 */
+        border-color: rgba(242, 97, 63, 0.4) !important; /* 边框清晰可见，但不是死板实线 */
+        box-shadow: 0 10px 30px rgba(242, 97, 63, 0.25) !important; /* 光晕收拢并提亮，确保绝对能看到高级的氛围光 */
+    }
+
+    .portfolio-item:hover .grid-thumb,
+    .portfolio-item:active .grid-thumb {
+        filter: grayscale(0) contrast(1) !important; /* 恢复点按时的彩色效果 */
+        transform: scale(1.05) !important; /* 恢复图片的微距放大效果 */
+    }
+
+    .mobile-only-img {
+        display: block !important;
+        width: 100%;
+        height: auto;
+        max-height: 250px; /* 限制图片最大高度防止把文字顶飞 */
+        object-fit: contain;
+        margin-top: auto; /* 把图片挤到卡片最下面 */
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); /* 加点悬浮阴影 */
+    }
+
+    .phase-text-container {
+        justify-content: flex-start !important; /* 让文字靠上，图片靠下 */
+        padding-bottom: 20px !important;
+    }
+
+    /* =======================================
+       6. 修复第4张卡片（控制台）的移动端排版
+       ======================================= */
+    .crawler-ui-layer .crawler-title,
+    .crawler-ui-layer .crawler-subtitle {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+    }
+
+    .crawler-ui-layer .crawler-title {
+        font-size: 8vw !important;
+        line-height: 1.1 !important;
+        margin-bottom: 5px !important;
+        white-space: normal !important;
+    }
+
+    .crawler-ui-layer .crawler-subtitle {
+        font-size: 0.85rem !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* 容器控制 */
+    .crawler-search-box {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        row-gap: 15px !important;  /* 第一行和第二行的呼吸间距 */
+        column-gap: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* 视觉重排 */
+    .cyber-select#engine-select { order: 1 !important; }
+    .cyber-input#city-input     { order: 2 !important; }
+    .cyber-select#edu-select    { order: 3 !important; }
+    .cyber-input#crawl-input    { order: 4 !important; }
+    .cyber-btn#crawl-btn        { order: 5 !important; }
+
+    /* =======================================
+       🌟 第一行三兄弟：视觉欺骗，层叠卡片魔法
+       ======================================= */
+    .cyber-select#engine-select,
+    .cyber-input#city-input,
+    .cyber-select#edu-select {
+        height: 48px !important;
+        border: none !important;
+        margin: 0 !important;
+        font-size: 0.85rem !important;
+        font-weight: 900 !important; /* 🌟 修复1：全部加粗，增加辨识度 */
+        color: #F2613F !important;   /* 🌟 修复2：全部换成高亮主题橙色！ */
+        text-align: center !important;
+        text-align-last: center !important;
+        padding: 0 !important;
+        position: relative !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* 如果有 placeholder (比如城市输入框)，也换成带点透明的橙色 */
+    .cyber-input#city-input::placeholder {
+        color: rgba(242, 97, 63, 0.6) !important;
+    }
+
+    /* 1. 左侧龙头：最高层级，最亮眼！ */
+    .cyber-select#engine-select {
+        width: 36% !important;
+        background: #fff !important;
+        border-radius: 24px !important;
+        z-index: 3 !important;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.3) !important;
+    }
+
+    /* 2. 中间身子：中等透明度，往死里藏！ */
+    .cyber-input#city-input {
+        width: 50% !important;
+        background: rgba(255, 255, 255, 0.25) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border-radius: 24px !important;
+        margin-left: -60px !important;
+        padding-left: 45px !important;
+        z-index: 2 !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-left: none !important;
+        box-shadow: 3px 0 12px rgba(0,0,0,0.15) !important;
+    }
+
+    /* 3. 右侧尾巴：极低透明度，往死里藏！ */
+    .cyber-select#edu-select {
+        width: 70% !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        border-radius: 24px !important;
+        margin-left: -120px !important;
+        padding-left: 70px !important;
+        z-index: 1 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-left: none !important;
+    }
+
+    /* =======================================
+       🌟 修复3：找回丢失的第二行排版代码！
+       ======================================= */
+    .cyber-input#crawl-input {
+        width: 68% !important; /* 让出空间给按钮 */
+        height: 50px !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 14px !important;
+        padding: 0 15px !important;
+        margin: 0 !important;
+        font-size: 0.85rem !important;
+        color: #fff !important;
+    }
+
+    .cyber-input#crawl-input::placeholder {
+        color: rgba(255,255,255,0.4) !important;
+    }
+
+    .cyber-btn#crawl-btn {
+        width: 28% !important;
+        height: 50px !important;
+        padding: 0 !important; /* 🌟 修复1：扒掉默认内边距，释放内部空间 */
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 14px !important;
+        background: #F2613F !important;
+        color: #fff !important;
+        font-size: 0.9rem !important; /* 稍微缩小一点点字号，显得更精致 */
+        font-weight: 900 !important;
+        box-shadow: 0 4px 15px rgba(242, 97, 63, 0.4) !important;
+
+        /* 🌟 修复2：Flex 魔法，强行让文字水平和垂直绝对居中！ */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        white-space: nowrap !important; /* 🌟 修复3：打死不准换行！ */
+    }
+
+    /* =======================================
+       🌟 终极交互魔法：点击谁，谁就独占整行，兄弟隐身！
+       ======================================= */
+
+    /* 1. 核心侦测：只要第一排有任何一个被点击聚焦(focus)，就把没被点击的兄弟强行隐藏！ */
+    .crawler-search-box:has(#engine-select:focus, #city-input:focus, #edu-select:focus) #engine-select:not(:focus),
+    .crawler-search-box:has(#engine-select:focus, #city-input:focus, #edu-select:focus) #city-input:not(:focus),
+    .crawler-search-box:has(#engine-select:focus, #city-input:focus, #edu-select:focus) #edu-select:not(:focus) {
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        opacity: 0 !important;
+        border: none !important;
+        overflow: hidden !important;
+    }
+
+    /* 2. 主角光环：被点击的那个框，瞬间解除束缚，撑满 100% 宽度 */
+    .crawler-search-box #engine-select:focus,
+    .crawler-search-box #city-input:focus,
+    .crawler-search-box #edu-select:focus {
+        width: 100% !important;
+        margin-left: 0 !important; /* 清除重叠的负边距 */
+        padding-left: 20px !important; /* 文字靠左，留出舒适边距 */
+        border-radius: 12px !important; /* 恢复完美的独立圆角 */
+        z-index: 10 !important;
+        text-align: left !important;
+        text-align-last: left !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important; /* 展开时加一点高级的悬浮阴影 */
+    }
+
+    /* 3. 质感微调：保持展开时的颜色对冲 */
+    .crawler-search-box #engine-select:focus {
+        background: #fff !important;
+        color: #F2613F !important;
+    }
+
+    .crawler-search-box #city-input:focus,
+    .crawler-search-box #edu-select:focus {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important; /* 边框提亮，突出焦点 */
+        color: #fff !important;
+    }
+
+    /* =======================================
+       7. 移动端爬虫结果面板 & 终端深度优化
+       ======================================= */
+    /* 终端日志高度微调 */
+    .cyber-terminal {
+        width: 100% !important;
+        margin-top: 20px !important;
+    }
+    .terminal-body {
+        height: 120px !important; /* 手机端终端稍微矮一点，留出空间 */
+    }
+
+    /* 爬虫结果大容器：解除高度限制，交给外层卡片去滚动 */
+    .cyber-results-container {
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin-top: 20px !important;
+        padding-right: 0 !important; /* 去除原本给 PC 滚动条留的缝隙 */
+    }
+
+    /* 🎯 核心魔法：将原本横排的数据打碎，变成上下排布的移动端卡片 */
+    .cyber-result-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 15px !important;
+    }
+
+    /* 内部每一行变成：左边标签，右边数值 */
+    .cyber-result-item > div {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+    }
+
+    .cyber-label {
+        font-size: 0.8rem !important;
+        opacity: 0.7 !important;
+        min-width: 60px !important; /* 固定左边标签的宽度 */
+    }
+
+    .cyber-value {
+        font-size: 0.95rem !important;
+        text-align: right !important; /* 数值全部靠右 */
+        max-width: 70% !important;
+        white-space: normal !important;
+        word-break: break-all !important;
+    }
+
+    /* 数据来源标签(如：智联招聘) 单独排布在最底下，加一条虚线分割 */
+    .cyber-result-item > div:last-child {
+        margin-top: 8px !important;
+        padding-top: 12px !important;
+        border-top: 1px dashed rgba(255,255,255,0.1) !important;
+        justify-content: flex-end !important;
+    }
+
 }

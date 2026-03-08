@@ -1,6 +1,6 @@
 /**
- * 工业动力学转场母版 - V18 (拟人光标注入版)
- * 核心：保持 V17 的块对齐逻辑，注入拟人化光标状态机
+ * 工业动力学转场母版 - V19 (PC & Mobile 完美双端适配版)
+ * 核心：注入响应式状态机，手机端根据宽度自适应防裁切，PC端保持原始张力
  */
 const initSnapAnimations = () => {
     const containers = document.querySelectorAll('.snap-box');
@@ -12,76 +12,84 @@ const initSnapAnimations = () => {
             while(lines.length < 4) lines.push(lines[lines.length-1] || " ");
             if(lines.length > 4) lines = lines.slice(0, 4);
 
-            const totalFrames = 420; // 适当拉长时间轴以容纳闪烁
+            const totalFrames = 420;
             let maxWidth = 0, step = 0, centeringOffset = 0;
+            let isMobile = false;
 
-            p.setup = () => {
-                const canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
-                canvas.parent(container);
-                // 关键：改为左对齐实现稳定打字，但通过 Offset 实现视觉居中
-                p.textAlign(p.LEFT, p.CENTER);
-                p.textFont('Space Grotesk');
-                p.textSize(p.height * 0.13);
-                p.textStyle(p.BOLD);
+            // --- 核心修复：集中处理响应式计算的工具函数 ---
+            const calcResponsive = () => {
+                isMobile = window.innerWidth <= 768;
 
+                if (isMobile) {
+                    // 📱 手机端：字号基于屏幕宽度，防止被左右裁切
+                    p.textSize(p.width * 0.13);
+                } else {
+                    // 💻 PC端：保持原样，基于高度带来视觉冲击力
+                    p.textSize(p.height * 0.13);
+                }
+
+                // 重新计算最大宽度
                 maxWidth = 0;
                 lines.forEach(line => {
                     let w = p.textWidth(line);
                     if (w > maxWidth) maxWidth = w;
                 });
-                step = maxWidth + 600;
-                centeringOffset = -maxWidth / 2; // 视觉对齐偏置
+
+                // 间距调整：手机端缩短左右滑动的间隔时间与距离
+                step = maxWidth + (isMobile ? 120 : 600);
+                centeringOffset = -maxWidth / 2;
+            };
+
+            p.setup = () => {
+                const canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
+                canvas.parent(container);
+                p.textAlign(p.LEFT, p.CENTER);
+                p.textFont('Space Grotesk');
+                p.textStyle(p.BOLD);
+
+                // 初始化时计算一次响应式参数
+                calcResponsive();
             };
 
             p.draw = () => {
                 p.clear();
                 let frame = p.frameCount % totalFrames;
-                let spacing = 220, xOffset = 0, reveal = 1;
+                let xOffset = 0, reveal = 1;
                 let cursorState = 'none'; // none, blink, solid
                 let alpha = 255;
 
-                // --- 1. 拟人化光标与动画状态机 ---
+                // --- 动态计算行距 (针对手机端缩放) ---
+                // PC 保持 220/110，手机端根据字号动态计算紧凑行距
+                let maxSp = isMobile ? p.textSize() * 1.8 : 220;
+                let minSp = isMobile ? p.textSize() * 1.0 : 110;
+                let spacing = maxSp;
 
-                // [0-40帧] 思考期：光标闪烁，文字未现
+                // --- 1. 拟人化光标与动画状态机 ---
                 if (frame < 40) {
                     reveal = 0; cursorState = 'blink';
-                }
-                // [40-100帧] 打字期：文字同步打出，光标常亮
-                else if (frame < 100) {
+                } else if (frame < 100) {
                     reveal = p.map(frame, 40, 100, 0, 1, true);
                     cursorState = 'solid';
-                    spacing = 220;
-                }
-                // [100-140帧] 停顿期：字打完了，光标闪烁
-                else if (frame < 140) {
+                    spacing = maxSp;
+                } else if (frame < 140) {
                     reveal = 1; cursorState = 'blink';
-                    spacing = 220;
-                }
-                // [140-200帧] 聚合期：上下合并，光标按要求消失
-                else if (frame < 200) {
+                    spacing = maxSp;
+                } else if (frame < 200) {
                     reveal = 1; cursorState = 'none';
-                    spacing = p.map(frame, 140, 200, 220, 110, true);
-                }
-                // [200-260帧] 聚合停顿：并拢静止 1s，光标保持隐藏
-                else if (frame < 260) {
+                    spacing = p.map(frame, 140, 200, maxSp, minSp, true);
+                } else if (frame < 260) {
                     reveal = 1; cursorState = 'none';
-                    spacing = 110; xOffset = 0;
-                }
-                // [260-360帧] 平移期：整体向左滑动，光标重新闪烁
-                else if (frame < 360) {
+                    spacing = minSp; xOffset = 0;
+                } else if (frame < 360) {
                     reveal = 1; cursorState = 'blink';
-                    spacing = 110;
+                    spacing = minSp;
                     xOffset = p.map(frame, 260, 360, 0, -step, true);
-                }
-                // [360-400帧] 删除期：像按退格键一样逐个消失，光标常亮
-                else if (frame < 400) {
-                    spacing = 110; xOffset = -step;
+                } else if (frame < 400) {
+                    spacing = minSp; xOffset = -step;
                     reveal = p.map(frame, 360, 400, 1, 0, true);
                     cursorState = 'solid';
-                }
-                // [400-420帧] 结尾：文字消失，光标最后闪烁几下
-                else {
-                    spacing = 110; xOffset = -step;
+                } else {
+                    spacing = minSp; xOffset = -step;
                     reveal = 0; cursorState = 'blink';
                 }
 
@@ -111,7 +119,6 @@ const initSnapAnimations = () => {
                             p.push();
                             p.noStroke();
                             p.fill(242, 97, 63, alpha);
-                            // 锁定 3px 宽度，高度随字号
                             p.rect(cursorX, y - p.textSize()*0.42, 3, p.textSize()*0.85);
                             p.pop();
                         }
@@ -123,11 +130,8 @@ const initSnapAnimations = () => {
 
             p.windowResized = () => {
                 p.resizeCanvas(container.offsetWidth, container.offsetHeight);
-                p.textSize(p.height * 0.13);
-                maxWidth = 0;
-                lines.forEach(line => { let w = p.textWidth(line); if (w > maxWidth) maxWidth = w; });
-                step = maxWidth + 600;
-                centeringOffset = -maxWidth / 2;
+                // 窗口尺寸改变（如横竖屏切换）时，重新校准参数
+                calcResponsive();
             };
         };
         new p5(sketch);

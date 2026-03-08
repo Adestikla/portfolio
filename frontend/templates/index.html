@@ -163,7 +163,7 @@
                     <li><span>{{ t.bio_label_degree }}</span>{{ t.bio_val_degree }}</li>
                     <li><span>{{ t.bio_label_birthday }}</span>2003.04.10</li>
                     <li><span>{{ t.bio_label_contact }}</span>+86 19528447410</li>
-                    <li><span>{{ t.bio_label_gmail }}</span>chaichaikunyang@gmail.com</li>
+                    <li><span>{{ t.bio_label_gmail }}</span>walkadam30@gmail.com</li>
                 </ul>
             </div>
 
@@ -353,51 +353,51 @@
         <div class="crawler-sticky-wrapper">
             <canvas id="crawler-canvas"></canvas>
 
-            <div class="phase-text-container" id="text-phase-1">
-                <h3>{{ t.stage_1_title }}</h3>
-                <p>{{ t.stage_1_desc }}</p>
-            </div>
-
-            <div class="phase-text-container" id="text-phase-2">
-                <h3>{{ t.stage_2_title }}</h3>
-                <p>{{ t.stage_2_desc }}</p>
-            </div>
-
-            <div class="phase-text-container" id="text-phase-3">
-                <h3>{{ t.stage_3_title }}</h3>
-                <p>{{ t.stage_3_desc }}</p>
-            </div>
-
-            <div class="crawler-ui-layer">
-                <h2 class="crawler-title" style="opacity: 1;">{{ t.crawler_title }}</h2>
-                <p class="crawler-subtitle" style="opacity: 1;">{{ t.crawler_subtitle }}</p>
-
-                <div class="crawler-search-box">
-                    <select id="engine-select" class="cyber-select" style="width: 140px; border-color: #00ff00; color: #00ff00;">
-                        <option value="job">{{ t.opt_job }}</option>
-                        <option value="house">{{ t.opt_house }}</option>
-                    </select>
-
-                    <input type="text" id="city-input" placeholder="{{ t.placeholder_city }}" class="cyber-input" style="width: 140px;">
-
-                    <input type="text" id="crawl-input" placeholder="{{ t.placeholder_target }}" class="cyber-input">
-
-                    <select id="edu-select" class="cyber-select">
-                        <option value="不限">{{ t.opt_edu_1 }}</option>
-                        <option value="大专">{{ t.opt_edu_2 }}</option>
-                        <option value="本科">{{ t.opt_edu_3 }}</option>
-                        <option value="硕士">{{ t.opt_edu_4 }}</option>
-                    </select>
-
-                    <button id="crawl-btn" class="cyber-btn">{{ t.btn_initiate }}</button>
+            <div class="crawler-mobile-flex-container">
+                <div class="phase-text-container" id="text-phase-1">
+                    <h3>{{ t.stage_1_title }}</h3>
+                    <p>{{ t.stage_1_desc }}</p>
+                    <img src="/static/img/crawler_step1.png" class="mobile-only-img" alt="Step 1">
                 </div>
 
-                <div id="terminal-log" class="cyber-terminal hidden">
-                    <div class="terminal-header">{{ t.log_title }} <span style="animation: blink 1s infinite;">_</span></div>
-                    <div class="terminal-body" id="log-content"></div>
+                <div class="phase-text-container" id="text-phase-2">
+                    <h3>{{ t.stage_2_title }}</h3>
+                    <p>{{ t.stage_2_desc }}</p>
+                    <img src="/static/img/crawler_step2.png" class="mobile-only-img" alt="Step 2">
                 </div>
 
-                <div id="crawler-results" class="cyber-results-container hidden"></div>
+                <div class="phase-text-container" id="text-phase-3">
+                    <h3>{{ t.stage_3_title }}</h3>
+                    <p>{{ t.stage_3_desc }}</p>
+                    <img src="/static/img/crawler_step3.png" class="mobile-only-img" alt="Step 3">
+                </div>
+
+                <div class="crawler-ui-layer">
+                    <h2 class="crawler-title" style="opacity: 1;">{{ t.crawler_title }}</h2>
+                    <p class="crawler-subtitle" style="opacity: 1;">{{ t.crawler_subtitle }}</p>
+
+                    <div class="crawler-search-box">
+                        <select id="engine-select" class="cyber-select" style="width: 140px; border-color: #00ff00; color: #00ff00;">
+                            <option value="job">{{ t.opt_job }}</option>
+                            <option value="house">{{ t.opt_house }}</option>
+                        </select>
+                        <input type="text" id="city-input" placeholder="{{ t.placeholder_city }}" class="cyber-input" style="width: 140px;">
+                        <input type="text" id="crawl-input" placeholder="{{ t.placeholder_target }}" class="cyber-input">
+                        <select id="edu-select" class="cyber-select">
+                            <option value="不限">{{ t.opt_edu_1 }}</option>
+                            <option value="大专">{{ t.opt_edu_2 }}</option>
+                            <option value="本科">{{ t.opt_edu_3 }}</option>
+                            <option value="硕士">{{ t.opt_edu_4 }}</option>
+                        </select>
+                        <button id="crawl-btn" class="cyber-btn">{{ t.btn_initiate }}</button>
+                    </div>
+
+                    <div id="terminal-log" class="cyber-terminal hidden">
+                        <div class="terminal-header">{{ t.log_title }} <span style="animation: blink 1s infinite;">_</span></div>
+                        <div class="terminal-body" id="log-content"></div>
+                    </div>
+                    <div id="crawler-results" class="cyber-results-container hidden"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -412,7 +412,7 @@
 
         <div class="contact-content-wrapper minimalist-contact">
             <h2 class="contact-subtitle">{{ t.contact_title }}</h2>
-            <a href="mailto:1502885723@qq.com" class="huge-email">chaichaikunyang@gmail.com</a>
+            <a href="mailto:1502885723@qq.com" class="huge-email">walkadam30@gmail.com</a>
 
             <div class="footer-bottom">
                 <p>© 2026 ADESTIKLA. All rights reserved.</p>
@@ -453,18 +453,25 @@
             const wrapper = document.querySelector(".horizontal-wrapper");
             if (!wrapper) return;
 
-            gsap.to(wrapper, {
-                x: () => -(wrapper.scrollWidth - window.innerWidth),
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".horizontal-scroll-section",
-                    pin: true,        // 钉住页面
-                    scrub: 1,         // 丝滑跟随滚轮
-                    start: "top top",
-                    end: () => "+=" + wrapper.scrollWidth,
-                    invalidateOnRefresh: true
-                }
+            // 创建 GSAP 响应式结界
+            let mm = gsap.matchMedia();
+
+            // 💻 只有在 PC 端（屏幕宽度大于 768px），才执行“钉死”和“滑动”
+            mm.add("(min-width: 769px)", () => {
+                gsap.to(wrapper, {
+                    x: () => -(wrapper.scrollWidth - window.innerWidth),
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".horizontal-scroll-section",
+                        pin: true,        // 钉住页面
+                        scrub: 1,         // 丝滑跟随滚轮
+                        start: "top top",
+                        end: () => "+=" + wrapper.scrollWidth,
+                        invalidateOnRefresh: true
+                    }
+                });
             });
+            // 📱 手机端 (<= 768px) 时，GSAP 会自动拔掉这段代码的所有效果，恢复系统原生上下滑动！
         }
 
         window.addEventListener("load", () => {
