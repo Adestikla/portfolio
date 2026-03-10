@@ -359,9 +359,9 @@ PROJECTS_ZH = {
         ]
     },
     10: {
-        "grid_title": "IP<br>CHARACTER",
-        "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
-        "text": "原创 IP 形象“晓柏”的全链路设计与孵化。通过 Adobe Illustrator 精细的矢量绘图，实现从手绘草图到高精度数字图形的转化。深入探索角色的多维情绪表达，并将其无缝延展至多场景的周边物料设计中。",
+        "grid_title": "CREATIVE<br>POSTER",
+        "title": "CREATIVE<br>POSTER", "client": "Personal Project", "role": "Visual Designer", "year": "2025",
+        "text": "一系列聚焦于多元主题的创意海报设计。涵盖了从创意表达、社会议题（如女性安全与反暴力）到信息可视化指南的多维度视觉探索。通过插画、排版与色彩的有机结合，将抽象概念转化为具有强烈视觉冲击力和情感共鸣的平面作品。",
         "image": "/static/img/work10.jpg",
         "gallery": [
             "/static/img/work10_detail_1.jpg",
@@ -491,9 +491,9 @@ PROJECTS_EN = {
         ]
     },
     10: {
-        "grid_title": "IP<br>CHARACTER",
-        "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
-        "text": "Full-cycle design and incubation of the original IP character 'Xiaobai'. Through precise vector drawing in Adobe Illustrator, achieved the transformation from hand-drawn sketches to high-precision digital graphics. Deeply explored the character's multi-dimensional emotional expressions and seamlessly extended them into multi-scenario merchandise design.",
+        "grid_title": "CREATIVE<br>POSTER",
+        "title": "CREATIVE<br>POSTER", "client": "Personal Project", "role": "Visual Designer", "year": "2025",
+        "text": "A series of creative poster designs focusing on diverse themes. It covers multi-dimensional visual explorations from creative expression and social issues (such as female safety and anti-violence) to infographic guides. Through the organic combination of illustration, typography, and color, abstract concepts are transformed into graphic works with strong visual impact and emotional resonance.",
         "image": "/static/img/work10.jpg",
         "gallery": [
             "/static/img/work10_detail_1.jpg",
@@ -589,7 +589,7 @@ I18N_DB = {
         "dir_1_4": "边缘网络与 WAF",
         "dir_title_2": "创意愿景",
         "dir_2_1": "品牌视觉",
-        "dir_2_2": "IP 角色",
+        "dir_2_2": "创业海报",
         "dir_2_3": "字体与海报",
         "dir_2_4": "镜头与光影",
 
@@ -701,7 +701,7 @@ I18N_DB = {
         "dir_1_4": "Edge Network & WAF",
         "dir_title_2": "CREATIVE VISION",
         "dir_2_1": "Brand Identity",
-        "dir_2_2": "IP Character",
+        "dir_2_2": "Creative Poster",
         "dir_2_3": "Typography & Poster",
         "dir_2_4": "Lens & Light",
 
