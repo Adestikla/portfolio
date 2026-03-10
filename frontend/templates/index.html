@@ -72,23 +72,11 @@
     <title>Adestikla Portfolio</title>
     <link rel="icon" href="/static/img/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-
-    ```
-
-#### 第二招：主视觉资源的“预先指令”
-在 `<head>` 的最顶部（`<title>` 下方），加入**关键资源的预加载指令**。让浏览器在还没看到 CSS 的时候，就开始疯狂拉取你的首页背景图！
-
-**添加这段代码：**
-```html
-    <title>Adestikla Portfolio</title>
-    <link rel="preload" as="image" href="/static/img/back.jpg">
-    <link rel="preload" as="image" href="/static/img/figure.png">
-    <link rel="preload" as="image" href="https://www.transparenttextures.com/patterns/stardust.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script>
         // 禁用右键菜单
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -614,8 +602,8 @@ overlay.addEventListener('click', () => {
             });
         });
     </script>
-        <script src="{{ url_for('static', path='js/snap_effect.js') }}" defer></script>
-    <script src="{{ url_for('static', path='js/crawler_3d.js') }}" defer></script>
+        <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+    <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
