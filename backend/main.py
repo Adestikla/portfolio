@@ -269,7 +269,7 @@ PROJECTS_ZH = {
     1: {
         "grid_title": "CI/CD Pipeline",
         "title": "CI/CD<br>PIPELINE", "client": "Personal Project", "role": "Cloud Architecture", "year": "2026",
-        "text": "基于 GitHub + Render 的云原生自动化部署。摒弃了传统的传输模式，打通了“推即部署 (Push-to-Deploy)”的持续交付工作流，保证了核心爬虫引擎与 3D 视觉的零宕机平滑更新。",
+        "text": "基于 GitHub Actions 与 Render 构建的云原生持续交付流水线。摒弃传统的手动运维，实现了“代码推送即部署”的全自动化工作流。通过容器化环境隔离与秒级构建，确保了底层双端渲染引擎与核心业务的零宕机更新。",
         "image": "/static/img/work1.jpg",
         "gallery": [
             "/static/img/work1_detail_1.jpg",
@@ -279,9 +279,9 @@ PROJECTS_ZH = {
         ]
     },
     2: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Asset Protection",
         "title": "FRONTEND<br>SANDBOX", "client": "Personal Project", "role": "Asset Protection", "year": "2026",
-        "text": "多维度的代码防逆向与防扒站“护城河”。全面封锁调试快捷键，在内存中植入动态 Debugger 炸弹抵御恶意调试，并配置防点击劫持机制保护核心 WebGL 资产的归属权。",
+        "text": "激进的防御性前端架构。在内存层面植入动态 Debugger 陷阱，深度封锁开发者工具与非法调试。结合运行时 DOM 混淆与防嵌套机制，构建了一道绝对的数字护城河，确保核心 WebGL 资产与交互逻辑不被恶意逆向或窃取。",
         "image": "/static/img/work2.jpg",
         "gallery": [
             "/static/img/work2_detail_1.jpg",
@@ -291,9 +291,9 @@ PROJECTS_ZH = {
         ]
     },
     3: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Anti-Scraping Engine",
         "title": "ANTI-SCRAPING<br>ENGINE", "client": "Personal Project", "role": "Business Security", "year": "2026",
-        "text": "“以攻促防”的动态反爬虫防御体系。接口层实施严格鉴权与高频限流（Rate Limiting），配合前端渲染阶段的脏数据混淆，有效阻截未经授权的自动化探测脚本与恶意剥离。",
+        "text": "以攻促防的动态防御引擎与多端交互矩阵。后端依托 SSE 建立高频实时数据流；前端在移动端创新性引入“层叠折叠 UI (Stacked Pills)”，利用纯 CSS 伪类打破常规，实现原生 App 级的零侵入极速交互。有效清洗恶意机器流量，同时保障真实用户的极致体验。",
         "image": "/static/img/work3.jpg",
         "gallery": [
             "/static/img/work3_detail_1.jpg",
@@ -303,9 +303,9 @@ PROJECTS_ZH = {
         ]
     },
     4: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Edge Network & WAF",
         "title": "EDGE NETWORK<br>& WAF", "client": "Personal Project", "role": "Boundary Defense", "year": "2026",
-        "text": "依托 Cloudflare 构建的抗 DDoS 与边缘网络护盾。隐藏服务器真实源 IP，在网络边缘层清洗恶意洪水攻击，并利用全球 CDN 节点极限加速大规模 3D 粒子渲染引擎库的加载。",
+        "text": "依托 Cloudflare 部署的无服务器边缘防御盾。在网络边界层清洗 DDoS 洪水并隐藏源站真实 IP。同时针对设备算力实施了“双端物理隔离”，智能嗅探并按需分发渲染负荷——为桌面端注入 10 万级满血粒子，为移动端极致降维，在颠覆性视觉与性能间达到绝对平衡。",
         "image": "/static/img/work4.jpg",
         "gallery": [
             "/static/img/work4_detail_1.jpg",
@@ -315,30 +315,30 @@ PROJECTS_ZH = {
         ]
     },
 
-    # ------ 第 2 章: DATA INTELLIGENCE & SECURITY (5-8) 【代码展示组】 ------
+    # ------ 第 2 章: DATA INTELLIGENCE & SECURITY (5-8) ------
     5: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "CORE ARCHITECTURE<br>& WAF",
         "title": "CORE ARCHITECTURE<br>& WAF", "client": "Confidential SaaS", "role": "Backend Security", "year": "2025",
         "text": "实施了严格的 CSP 策略、环境指纹校验以及 API 接口的三重鉴权，确保服务端固若金汤。",
         "code": CODE_APP_PY,
         "filename": "app.py"
     },
     6: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "DATABASE &<br>TRANSACTIONS",
         "title": "DATABASE &<br>TRANSACTIONS", "client": "Confidential SaaS", "role": "Data Persistence", "year": "2025",
         "text": "处理数据库兼容性，管理连接池及确保高并发下的核心资产发放原子化交易安全。",
         "code": CODE_DB_PY,
         "filename": "database.py"
     },
     7: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "WEBHOOK &<br>PAYMENTS",
         "title": "WEBHOOK &<br>PAYMENTS", "client": "Confidential SaaS", "role": "API Integration", "year": "2025",
         "text": "使用 FastAPI 异步处理高并发的第三方 Webhook（Stripe），并严格验证数字签名防御伪造请求。",
         "code": CODE_WEBHOOK,
         "filename": "webhook_server.py"
     },
     8: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "ANTI-SCRAPING<br>ENGIN",
         "title": "ANTI-SCRAPING<br>ENGINE", "client": "Confidential SaaS", "role": "Frontend Security", "year": "2025",
         "text": "部署了复杂的 JavaScript 调试器陷阱（Debugger Trap）与 DOM 动态混淆，有效抵御自动化爬虫。",
         "code": CODE_JS_SEC,
@@ -347,7 +347,7 @@ PROJECTS_ZH = {
 
     # ------ 第 3 章: DECOUPLED SYSTEM (9-12) 【已全部添加 gallery 结构】 ------
     9: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "BRAND<br>IDENTITY",
         "title": "BRAND<br>IDENTITY", "client": "柏魅手工饰品", "role": "Brand Designer", "year": "2025",
         "text": "主导“柏魅”品牌从 0 到 1 的视觉体系搭建。包含品牌标志设计、标准色彩规范及全套 VI 视觉识别系统。将抽象的品牌理念具象化为高辨识度的商业视觉资产，并负责产品宣传海报与包装等核心物料的视觉把控。",
         "image": "/static/img/work9.jpg",
@@ -359,7 +359,7 @@ PROJECTS_ZH = {
         ]
     },
     10: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "IP<br>CHARACTER",
         "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
         "text": "原创 IP 形象“晓柏”的全链路设计与孵化。通过 Adobe Illustrator 精细的矢量绘图，实现从手绘草图到高精度数字图形的转化。深入探索角色的多维情绪表达，并将其无缝延展至多场景的周边物料设计中。",
         "image": "/static/img/work10.jpg",
@@ -371,7 +371,7 @@ PROJECTS_ZH = {
         ]
     },
     11: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "TYPOGRAPHY<br>& POSTER",
         "title": "TYPOGRAPHY<br>& POSTER", "client": "Concept Design", "role": "Graphic Designer", "year": "2025",
         "text": "以“文物”为切入点的字体与海报视觉实验。打破传统排版束缚，将定制化字体设计与现代图形语言相融合。通过高逼真度的 3D 样机渲染（Mockup），精准预演设计在现实物理空间与印刷材质上的最终落地效果。",
         "image": "/static/img/work11.jpg",
@@ -383,7 +383,7 @@ PROJECTS_ZH = {
         ]
     },
     12: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "LENS<br>& LIGHT",
         "title": "LENS<br>& LIGHT", "client": "Photography", "role": "Photographer", "year": "2023-2026",
         "text": "镜头背后的视觉探索。作为对数字设计的物理延伸，通过摄影捕捉真实世界的光影、几何与空间结构。对色彩分级（Color Grading）与构图的敏锐感知，不仅记录了生活瞬间，更深层次反哺了我在 UI/UX 设计中的审美直觉。",
         "image": "/static/img/work12.jpg",
@@ -401,7 +401,7 @@ PROJECTS_EN = {
     1: {
         "grid_title": "CI/CD Pipeline",
         "title": "CI/CD<br>PIPELINE", "client": "Personal Project", "role": "Cloud Architecture", "year": "2026",
-        "text": "Cloud-native automated deployment based on GitHub and Render. Discarding traditional transfer methods, it enables a 'Push-to-Deploy' continuous delivery workflow, ensuring zero-downtime, smooth updates for the core scraping engine and 3D visuals.",
+        "text": "A cloud-native continuous delivery pipeline built on GitHub Actions and Render. Discarding traditional manual operations, it achieves a fully automated 'push-to-deploy' workflow. Through containerized environment isolation and rapid builds, it ensures zero-downtime updates for the dual-end rendering engine and core logic.",
         "image": "/static/img/work1.jpg",
         "gallery": [
             "/static/img/work1_detail_1.jpg",
@@ -411,9 +411,9 @@ PROJECTS_EN = {
         ]
     },
     2: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Asset Protection",
         "title": "FRONTEND<br>SANDBOX", "client": "Personal Project", "role": "Asset Protection", "year": "2026",
-        "text": "A multi-dimensional 'moat' for code anti-reversing and anti-scraping. It comprehensively blocks debugging shortcuts, implants dynamic Debugger bombs in memory to resist malicious debugging, and configures anti-clickjacking mechanisms to protect the ownership of core WebGL assets.",
+        "text": "Radical defensive front-end architecture. Embedding dynamic Debugger traps at the memory level to heavily lock down developer tools and illegal debugging. Combined with runtime DOM obfuscation and anti-iframe mechanisms, it establishes an absolute digital moat, ensuring core WebGL assets and interactive logic cannot be maliciously reverse-engineered or stolen.",
         "image": "/static/img/work2.jpg",
         "gallery": [
             "/static/img/work2_detail_1.jpg",
@@ -423,9 +423,9 @@ PROJECTS_EN = {
         ]
     },
     3: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Anti-Scraping Engine",
         "title": "ANTI-SCRAPING<br>ENGINE", "client": "Personal Project", "role": "Business Security", "year": "2026",
-        "text": "A dynamic anti-scraping defense system based on 'defense through offense'. The API layer implements strict authentication and high-frequency Rate Limiting, combined with dirty data obfuscation during the frontend rendering phase, effectively blocking unauthorized automated probing scripts and malicious extraction.",
+        "text": "A dynamic defense engine and multi-platform interactive matrix driven by an offensive mindset. The backend relies on SSE for high-frequency real-time data streaming; the frontend introduces an innovative 'Stacked Pills UI' on mobile, utilizing pure CSS pseudo-classes to achieve a zero-intrusion, native-app-level interactive experience. Effectively scrubs malicious bot traffic while ensuring ultimate user experience.",
         "image": "/static/img/work3.jpg",
         "gallery": [
             "/static/img/work3_detail_1.jpg",
@@ -435,9 +435,9 @@ PROJECTS_EN = {
         ]
     },
     4: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "Edge Network & WAF",
         "title": "EDGE NETWORK<br>& WAF", "client": "Personal Project", "role": "Boundary Defense", "year": "2026",
-        "text": "Anti-DDoS and edge network shield built on Cloudflare. It hides the server's real origin IP, scrubs malicious flood attacks at the network edge layer, and utilizes global CDN nodes to extremely accelerate the loading of large-scale 3D particle rendering engine libraries.",
+        "text": "Serverless edge defense shield deployed via Cloudflare. It scrubs DDoS floods and masks the origin server IP at the network boundary. Simultaneously, it implements 'dual-end physical isolation' based on device compute power—intelligently sniffing and distributing rendering loads. It delivers 100,000 full-blooded particles to desktop while optimizing for mobile, achieving an absolute balance between disruptive visuals and performance.",
         "image": "/static/img/work4.jpg",
         "gallery": [
             "/static/img/work4_detail_1.jpg",
@@ -449,28 +449,28 @@ PROJECTS_EN = {
 
     # ------ Chapter 2: DATA INTELLIGENCE & SECURITY (5-8) [Code Display Group] ------
     5: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "CORE ARCHITECTURE<br>& WAF",
         "title": "CORE ARCHITECTURE<br>& WAF", "client": "Confidential SaaS", "role": "Backend Security", "year": "2025",
         "text": "Implemented strict CSP policies, environmental fingerprint verification, and triple authentication for API interfaces to ensure an impenetrable backend server.",
         "code": CODE_APP_PY,
         "filename": "app.py"
     },
     6: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "DATABASE &<br>TRANSACTIONS",
         "title": "DATABASE &<br>TRANSACTIONS", "client": "Confidential SaaS", "role": "Data Persistence", "year": "2025",
         "text": "Handled database compatibility, managed connection pools, and ensured the security of atomic transactions for core asset distribution under high concurrency.",
         "code": CODE_DB_PY,
         "filename": "database.py"
     },
     7: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "WEBHOOK &<br>PAYMENTS",
         "title": "WEBHOOK &<br>PAYMENTS", "client": "Confidential SaaS", "role": "API Integration", "year": "2025",
         "text": "Used FastAPI to asynchronously process high-concurrency third-party Webhooks (Stripe), and strictly verified digital signatures to defend against forged requests.",
         "code": CODE_WEBHOOK,
         "filename": "webhook_server.py"
     },
     8: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "ANTI-SCRAPING<br>ENGINE",
         "title": "ANTI-SCRAPING<br>ENGINE", "client": "Confidential SaaS", "role": "Frontend Security", "year": "2025",
         "text": "Deployed complex JavaScript Debugger Traps and dynamic DOM obfuscation to effectively resist automated scrapers.",
         "code": CODE_JS_SEC,
@@ -479,7 +479,7 @@ PROJECTS_EN = {
 
     # ------ Chapter 3: DECOUPLED SYSTEM (9-12) [Gallery structure added to all] ------
     9: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "BRAND<br>IDENTITY",
         "title": "BRAND<br>IDENTITY", "client": "Baimei Handmade Jewelry", "role": "Brand Designer", "year": "2025",
         "text": "Led the 0-to-1 visual system construction for the 'Baimei' brand. This includes brand logo design, standard color specifications, and a complete VI (Visual Identity) system. Materialized abstract brand concepts into highly recognizable commercial visual assets, and took charge of the visual control for core materials like product promotional posters and packaging.",
         "image": "/static/img/work9.jpg",
@@ -491,7 +491,7 @@ PROJECTS_EN = {
         ]
     },
     10: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "IP<br>CHARACTER",
         "title": "IP<br>CHARACTER", "client": "Personal Project", "role": "Visual Illustrator", "year": "2025",
         "text": "Full-cycle design and incubation of the original IP character 'Xiaobai'. Through precise vector drawing in Adobe Illustrator, achieved the transformation from hand-drawn sketches to high-precision digital graphics. Deeply explored the character's multi-dimensional emotional expressions and seamlessly extended them into multi-scenario merchandise design.",
         "image": "/static/img/work10.jpg",
@@ -503,7 +503,7 @@ PROJECTS_EN = {
         ]
     },
     11: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "TYPOGRAPHY<br>& POSTER",
         "title": "TYPOGRAPHY<br>& POSTER", "client": "Concept Design", "role": "Graphic Designer", "year": "2025",
         "text": "A visual experiment in typography and posters starting from the concept of 'cultural relics'. Breaking the constraints of traditional typesetting, I integrated customized font design with modern graphic language. Through high-fidelity 3D mockup rendering, I accurately previewed the final implementation effect of the design in real physical spaces and on printing materials.",
         "image": "/static/img/work11.jpg",
@@ -515,7 +515,7 @@ PROJECTS_EN = {
         ]
     },
     12: {
-        "grid_title": "CI/CD Pipeline",
+        "grid_title": "LENS<br>& LIGHT",
         "title": "LENS<br>& LIGHT", "client": "Photography", "role": "Photographer", "year": "2023-2026",
         "text": "Visual exploration behind the lens. As a physical extension of digital design, I capture light, shadow, geometry, and spatial structures of the real world through photography. A keen perception of Color Grading and composition not only records moments of life but also deeply feeds back into my aesthetic intuition in UI/UX design.",
         "image": "/static/img/work12.jpg",
@@ -645,6 +645,7 @@ I18N_DB = {
         "stage_3_title": "阶段 03 / 数据处理",
         "stage_3_desc": "通过解耦云架构过滤噪音，并构建高度可用的情报矩阵。",
         "exp_explore": "探索 ↗",
+        "rotate_tip": "建议横屏以获得最佳体验 ↺",
 
         # 8. 爬虫界面与日志
         "crawler_title": "全网数据穿透矩阵",
@@ -687,6 +688,7 @@ I18N_DB = {
         "default_awards": "Independent Work",
         "project_overview": "PROJECT<br>OVERVIEW",
         "exp_explore": "EXPLORE ↗",
+        "rotate_tip": "Rotate device for better view ↺",
 
         # 3. Hero & Directory
         "portfolio_title": "Adestikla Portfolio",
