@@ -557,6 +557,17 @@ async def project_detail(request: Request, project_id: int, lang: str = "en"):  
         "lang": lang  # 【关键修复 5】：告诉前端当前是什么语言！
     })
 
+from fastapi import Response
+
+@app.post("/my-api/")
+async def silence_mysterious_requests():
+    # 返回 204 状态码，代表“收到请求，但不予理会”
+    return Response(status_code=204)
+
+@app.get("/my-api/")
+async def silence_mysterious_get():
+    return Response(status_code=204)
+
 I18N_DB = {
     "zh": {
         # 1. 系统警告与全局提示
@@ -592,6 +603,7 @@ I18N_DB = {
         "dir_2_2": "创业海报",
         "dir_2_3": "字体与海报",
         "dir_2_4": "镜头与光影",
+        "rotate_tip": "建议横屏查看以获得最佳体验 ↺",
 
         # 4. 个人信息与引言
         "bio_quote": "“设计不仅关乎视觉——它在于解决问题并激发共鸣。”",
@@ -645,7 +657,6 @@ I18N_DB = {
         "stage_3_title": "阶段 03 / 数据处理",
         "stage_3_desc": "通过解耦云架构过滤噪音，并构建高度可用的情报矩阵。",
         "exp_explore": "探索 ↗",
-        "rotate_tip": "建议横屏以获得最佳体验 ↺",
 
         # 8. 爬虫界面与日志
         "crawler_title": "全网数据穿透矩阵",

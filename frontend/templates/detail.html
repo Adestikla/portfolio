@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <div id="image-lightbox" class="image-lightbox">
+        <div class="rotate-tip">{{ t.rotate_tip }}</div>
+        <img id="lightbox-img" src="" alt="Full Scale View">
+    </div>
     <meta charset="UTF-8">
     <script>
         if (window.top !== window.self) {
@@ -117,6 +121,36 @@
                 }, 100);
             }
         }, 500); // 每半秒嗅探一次
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+
+            // 1. 获取所有需要放大的图片（主图 + 画廊图）
+            const images = document.querySelectorAll('.pdf-img, .grid-thumb');
+
+            images.forEach(img => {
+                img.addEventListener('click', function() {
+                    // 获取图片地址：.pdf-img 用 src，.grid-thumb 用 backgroundImage
+                    let src = this.src;
+                    if (!src && this.style.backgroundImage) {
+                        src = this.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+                    }
+
+                    if (src) {
+                     lightboxImg.src = src;
+                        lightbox.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // 锁定背景滚动
+                    }
+                });
+            });
+
+            // 2. 点击遮罩层任何地方关闭
+            lightbox.addEventListener('click', function() {
+                this.classList.remove('active');
+                document.body.style.overflow = 'auto'; // 恢复滚动
+            });
+        });
     </script>
     </head>
 <body class="pdf-theme">

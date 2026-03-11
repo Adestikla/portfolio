@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <script>
+        (function() {
+            // 拦截 Fetch 请求
+            const originalFetch = window.fetch;
+            window.fetch = function() {
+                if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].includes('/my-api/')) {
+                    console.warn('已静默拦截非法 API 请求:', arguments[0]);
+                    return new Promise(() => {}); // 返回一个永远挂起的 Promise，彻底静默
+                }
+                return originalFetch.apply(this, arguments);
+            };
+
+            // 拦截 XMLHttpRequest 请求
+            const originalXHR = window.XMLHttpRequest.prototype.open;
+            window.XMLHttpRequest.prototype.open = function(method, url) {
+                if (typeof url === 'string' && url.includes('/my-api/')) {
+                    console.warn('已静默拦截非法 XHR 请求:', url);
+                    return; // 终止请求
+                }
+                return originalXHR.apply(this, arguments);
+            };
+        })();
+    </script>
     <meta charset="UTF-8">
     <script>
     // --- 插件注入静默清理器 ---
