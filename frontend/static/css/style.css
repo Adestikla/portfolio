@@ -1938,3 +1938,12 @@ body.pdf-theme {
     }
 
 }
+
+/* ================= 性能优化：延迟渲染屏幕外的内容 ================= */
+.project-grid-section,
+.vertical-snap-section,
+.crawler-3d-section,
+.contact-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px; /* 给浏览器一个大概的高度占位 */
+}

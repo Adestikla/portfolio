@@ -2,6 +2,31 @@
 <html lang="zh-CN">
 <head>
     <script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // 1. 背景图片懒加载
+                const lazyBackgrounds = document.querySelectorAll('.lazy-bg');
+                if ("IntersectionObserver" in window) {
+                    let lazyBackgroundObserver = new IntersectionObserver(function(entries, observer) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                let lazyBackground = entry.target;
+                                // 将 data-bg 里的 url 赋值给 style
+                                lazyBackground.style.backgroundImage = lazyBackground.dataset.bg;
+                                lazyBackground.classList.remove("lazy-bg");
+                                lazyBackgroundObserver.unobserve(lazyBackground);
+                            }
+                        });
+                    }, { rootMargin: "0px 0px 500px 0px" }); // 提前 500px 加载，防止用户看到空白
+
+                    lazyBackgrounds.forEach(function(lazyBackground) {
+                        lazyBackgroundObserver.observe(lazyBackground);
+                    });
+                }
+            });
+        </script>
+
         (function() {
             // 拦截 Fetch 请求
             const originalFetch = window.fetch;
@@ -98,8 +123,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script defer src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
+<script defer src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
     <script>
         // 禁用右键菜单
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -303,7 +330,7 @@
 
             <a href="/project/1?lang={{ lang }}" class="portfolio-item">
                 <div class="portfolio-visual">
-                    <div class="grid-thumb" style="background-image: url('/static/img/work1.jpg')"></div>
+                    <div class="grid-thumb lazy-bg" data-bg="url('/static/img/work1.jpg')"></div>
                 </div>
                 <div class="portfolio-meta">
                     <h4>{{ t.dir_1_1 }}</h4>
@@ -547,32 +574,101 @@
             // 📱 手机端 (<= 768px) 时，GSAP 会自动拔掉这段代码的所有效果，恢复系统原生上下滑动！
         }
 
-        window.addEventListener("load", () => {
-            document.getElementById('path-gray').setAttribute('d', getPath());
-            document.getElementById('path-white').setAttribute('d', getPath());
+        // 4. 定义横向滚动函数 (保持你原来的逻辑)
+function initHorizontalScroll() {
+    const wrapper = document.querySelector(".horizontal-wrapper");
+    if (!wrapper) return;
+    let mm = gsap.matchMedia();
+    mm.add("(min-width: 769px)", () => {
+        gsap.to(wrapper, {
+            x: () => -(wrapper.scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".horizontal-scroll-section",
+                pin: true,
+                scrub: 1,
+                start: "top top",
+                end: () => "+=" + wrapper.scrollWidth,
+                invalidateOnRefresh: true
+            }
+        });
+    });
+}
 
-            const progress = { val: 0 };
-            const tl = gsap.timeline();
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('path-gray').setAttribute('d', getPath());
+    document.getElementById('path-white').setAttribute('d', getPath());
 
-            // --- F. 点击放大交互 ---
-            const overlay = document.querySelector('.full-screen-overlay');
-            const overlayHost = document.querySelector('.overlay-content-host');
-            const cards = document.querySelectorAll('.horizontal-wrapper .glass-container');
+    const isFirstVisit = !sessionStorage.getItem('introPlayed');
+    const savedScrollPos = sessionStorage.getItem('scrollPosition');
 
-            cards.forEach(card => {
-                card.style.cursor = 'zoom-in';
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
+    // 核心逻辑：动画播放完成或跳过后的初始化工作
+    const finalizeSetup = () => {
+        document.body.style.overflow = "auto";
+        initHorizontalScroll();
+        window.dispatchEvent(new Event("start3DScroll"));
 
-                    // 我们不只是复制 innerHTML，我们给外层宿主也加上相同的类名
-                    // 这样 CSS 里的 .bio-layout 等样式才能在放大后生效
-                    overlayHost.className = 'overlay-content-host ' + card.className + ' expanded-view';
-                    overlayHost.innerHTML = card.innerHTML;
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+            // 如果有保存的滚动位置，恢复它
+            if (savedScrollPos && !isFirstVisit) {
+                window.scrollTo({ top: parseInt(savedScrollPos), behavior: "instant" });
+            }
+        }, 300);
+    };
 
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-            });
+    if (isFirstVisit) {
+        // --- 首次访问：播放加速版完整动画 ---
+        const progress = { val: 0 };
+        const tl = gsap.timeline();
+
+        tl.to(progress, {
+            val: 100,
+            duration: 2.2, // 【优化】从 4 秒压缩到 2.2 秒，数字飞速滚动，既有高级感又不拖沓
+            ease: "power2.inOut",
+            onUpdate: () => {
+                const p = progress.val;
+                document.getElementById('mask-white').style.width = p + "%";
+                document.getElementById('mask-gray').style.width = Math.min(p + 5, 100) + "%";
+                gsap.set("#col-o .digit-strip", { y: -p * 60 });
+                gsap.set("#col-t .digit-strip", { y: -(p / 10) * 60 });
+                gsap.set("#col-h .digit-strip", { y: p < 99 ? 0 : -(p - 99) * 60 });
+            }
+        })
+        // 【优化】通过调整后面的 "-=x.x" 时间重叠参数，让后续动画紧密咬合，总耗时控制在 3.8 秒左右结束
+        .to(".loader-wrapper", { y: -30, opacity: 0, duration: 0.6, ease: "power3.in" }, "-=0.2")
+        .to(".preloader", { yPercent: -100, duration: 0.8, ease: "expo.inOut" }, "-=0.1")
+        .to(".hero-layer", { opacity: 1, duration: 1.2, ease: "power2.out", stagger: 0.3 }, "-=0.8")
+        .to(".reveal-title", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: "power4.out" }, "-=0.8")
+        .from(".reveal-title", { scale: 1.05, duration: 1.5, ease: "power2.out" }, "-=1.2")
+        .to(".reveal-subtitle", { opacity: 1, y: 0, duration: 0.8 }, "-=1.0")
+        .add(() => {
+            sessionStorage.setItem('introPlayed', 'true'); // 标记已播放
+            finalizeSetup();
+        });
+    } else {
+        // --- 非首次访问：瞬间跳过动画 ---
+        gsap.set(".preloader", { display: "none" }); // 直接隐藏预加载
+        gsap.set(".hero-layer", { opacity: 1 });
+        gsap.set(".reveal-title", { clipPath: "inset(0% 0% 0% 0%)", scale: 1 });
+        gsap.set(".reveal-subtitle", { opacity: 1, y: 0 });
+        finalizeSetup();
+    }
+
+    // 独立动画：人物呼吸感与鼠标视差 (保持不变)
+    gsap.to(".layer-figure", { y: -30, rotation: 0.5, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    window.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 40;
+        const y = (e.clientY / window.innerHeight - 0.5) * 40;
+        gsap.to(".layer-bg", { x: x * 0.2, y: y * 0.2, duration: 1 });
+        gsap.to(".layer-figure", { x: x, y: y, duration: 1.2 });
+    });
+
+    // 实时保存滚动位置
+    window.addEventListener("scroll", () => {
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }, { passive: true });
+});
 
 overlay.addEventListener('click', () => {
     overlay.classList.remove('active');
