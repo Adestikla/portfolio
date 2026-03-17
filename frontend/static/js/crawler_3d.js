@@ -184,7 +184,8 @@ window.addEventListener("load", () => {
         gsap.registerPlugin(ScrollTrigger);
 
         // --- 【核心 2：事件分流】 ---
-        window.addEventListener("start3DScroll", () => {
+        // --- 【核心 2：事件分流 (修复回退消失Bug)】 ---
+        const init3DScrollAnimations = () => {
             let mm = gsap.matchMedia();
 
             // 💻 1. PC 端逻辑
@@ -259,7 +260,14 @@ window.addEventListener("load", () => {
                     });
                 }
             });
-        });
+        };
+
+        // 🚨 核心修复：判断信号是否已经提前发过了
+        if (window.isIntroFinished) {
+            init3DScrollAnimations(); // 如果回退网页，进场动画秒跳过，信号已发，直接初始化
+        } else {
+            window.addEventListener("start3DScroll", init3DScrollAnimations); // 还在看进场动画，乖乖等信号
+        }
 
         const phasesArray = [shapes.chaos, shapes.web, shapes.network, shapes.streams, shapes.logo];
         const clock = new THREE.Clock();

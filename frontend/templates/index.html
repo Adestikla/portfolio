@@ -580,6 +580,7 @@
             const finalizeSetup = () => {
                 document.body.style.overflow = "auto";
                 initHorizontalScroll();
+                window.isIntroFinished = true;
                 window.dispatchEvent(new Event("start3DScroll"));
 
                 setTimeout(() => {
