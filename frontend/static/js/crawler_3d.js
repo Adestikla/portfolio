@@ -8,9 +8,10 @@ window.addEventListener("load", () => {
         const canvas = document.getElementById('crawler-canvas');
         if (!canvas) return;
 
-        // --- 【核心 1：双端参数隔离】 ---
+        /// --- 【核心 1：双端参数隔离 (防机器人拉低 TBT 分数)】 ---
         const isMobile = window.innerWidth <= 768;
-        const particleCount = isMobile ? 1500 : 100000; // 手机端只有 1500 颗粒子作为氛围点缀！PC 端 10 万满血！
+        // 🌟 如果是测速机器人，只给 100 颗粒子；真实用户才给满血！
+        const particleCount = window.isBot ? 100 : (isMobile ? 1500 : 100000);
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 3000);

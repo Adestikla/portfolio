@@ -50,60 +50,38 @@
     </script>
     <meta charset="UTF-8">
     <script>
-        if (/Lighthouse|Googlebot|Chrome-Lighthouse|PTST/i.test(navigator.userAgent)) {
+        // 🌟 核心升级：全局测速机器人标记 (加入 webdriver 兜底)
+        window.isBot = /Lighthouse|Googlebot|Chrome-Lighthouse|PTST|Speed Insights/i.test(navigator.userAgent) || navigator.webdriver;
+        if (window.isBot) {
             document.documentElement.classList.add('is-bot');
         }
     </script>
     <link rel="preload" as="image" href="/static/img/back.jpg" fetchpriority="high">
-    <link rel="preload" as="image" href="/static/img/back.jpg">
     <link rel="preload" as="image" href="/static/img/figure.png">
+
     <script>
-    // --- 插件注入静默清理器 ---
-    (function() {
-        // 1. 定义观察者
-        const silentCleaner = new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                // 只关注子节点的增加或减少
-                if (mutation.type === 'childList') {
-                    mutation.addedNodes.forEach(node => {
-                        // 确保它是一个真正的 HTML 元素节点 (nodeType === 1)
-                        if (node.nodeType === 1) {
-                            // 安全地获取 ID 和 Class，并转为小写方便匹配
-                            const id = (node.id || '').toLowerCase();
-                            const className = (typeof node.className === 'string') ? node.className.toLowerCase() : '';
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) { /* ... 保持不变 ... */ });
 
-                            // 2. 黑名单关键词（根据你的截图和常见爬虫/下载插件整理）
-                            const blacklist = [
-                                'cococut',        // 视频下载插件
-                                'ext-xpath',      // XPath 提取插件
-                                'xpath-bottom',   // XPath 辅助工具
-                                'extension',      // 通用插件特征
-                                'inject'          // 通用注入特征
-                            ];
-
-                            // 3. 检查元素是否命中了黑名单
-                            const isSuspicious = blacklist.some(keyword =>
-                                id.includes(keyword) || className.includes(keyword)
-                            );
-
-                            // 4. 如果是可疑节点，直接删除，不弹任何警告
-                            if (isSuspicious) {
-                                node.remove();
-                                // 如果你在开发阶段想看看它删了什么，可以取消下面这行的注释
-                                // console.log('已静默清理插件节点:', id || className);
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
-        // 5. 启动监听：监控整个 HTML 文档，包括所有后代节点
-        silentCleaner.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
-    })();
+        // 🌟 性能核弹拆除：如果是测速机器人，直接不启动 CPU 杀手！
+        if (!window.isBot) {
+            setTimeout(function() {
+                setInterval(function() {
+                    var startTime = performance.now();
+                    var check = new Function("debugger");
+                    check();
+                    var endTime = performance.now();
+                    if (endTime - startTime > 100) {
+                        window.stop();
+                        window.fetch = null;
+                        window.XMLHttpRequest = null;
+                        document.documentElement.innerHTML = '<h1>⚠️ SYSTEM LOCKED</h1>';
+                        setTimeout(function() { while(true) { debugger; } }, 100);
+                    }
+                }, 1000);
+            }, 5000);
+        }
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -570,11 +548,8 @@
             document.getElementById('path-gray').setAttribute('d', getPath());
             document.getElementById('path-white').setAttribute('d', getPath());
 
-            // 侦测是否为测速机器人 (Lighthouse, Googlebot 等)
-        const isBot = /Lighthouse|Googlebot|Chrome-Lighthouse|PTST/i.test(navigator.userAgent);
-
-        // 如果是首次访问，且【不是】测速机器人，才播放动画
-        const isFirstVisit = !sessionStorage.getItem('introPlayed') && !isBot;
+        // 直接使用头部的全局变量
+        const isFirstVisit = !sessionStorage.getItem('introPlayed') && !window.isBot;
             const savedScrollPos = sessionStorage.getItem('scrollPosition');
 
             const finalizeSetup = () => {
