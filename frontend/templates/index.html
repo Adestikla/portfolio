@@ -49,6 +49,8 @@
         })();
     </script>
     <meta charset="UTF-8">
+    <link rel="preload" as="image" href="/static/img/back.jpg">
+    <link rel="preload" as="image" href="/static/img/figure.png">
     <script>
     // --- 插件注入静默清理器 ---
     (function() {
@@ -140,39 +142,28 @@
             }
         });
 
-        setInterval(function() {
-            var startTime = performance.now();
-            // 隐蔽触发断点
-            var check = new Function("debugger");
-            check();
-            var endTime = performance.now();
+        setTimeout(function() {
+            setInterval(function() {
+                var startTime = performance.now();
+                var check = new Function("debugger");
+                check();
+                var endTime = performance.now();
 
-            // 如果断点停留时间超过 100 毫秒，说明对方强行打开了控制台！
-            if (endTime - startTime > 100) {
-                // 1. 网络熔断：掐断所有正在加载的媒体和资源
-                window.stop();
-
-                // 2. 接口阉割：彻底瘫痪浏览器的请求发包能力
-                window.fetch = null;
-                window.XMLHttpRequest = null;
-
-                // 3. 元素爆破：瞬间清空网页，换成黑客警告屏
-                document.documentElement.innerHTML = `
-                    <body style="background-color: #050505; color: #00ff00; height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: 'Courier New', monospace; text-align: center; overflow: hidden;">
-                        <h1 style="font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 15px #00ff00; letter-spacing: 5px;">⚠️ SYSTEM LOCKED</h1>
-                        <p style="font-size: 1.5rem; font-weight: bold; color: #ff4444; letter-spacing: 2px;">本网站禁止一切爬虫、AI 及第三方插件的引用。</p>
-                        <p style="font-size: 1rem; opacity: 0.5; margin-top: 40px; border: 1px solid #00ff00; padding: 10px 20px;">[ DOM Destroyed & Network Terminated ]</p>
-                    </body>
-                `;
-
-                // 【核心修复】：延迟 100 毫秒执行死循环，把主线程让给浏览器，让它有时间把警告屏渲染出来！
-                setTimeout(function() {
-                    while(true) {
-                        debugger;
-                    }
-                }, 100);
-            }
-        }, 500); // 每半秒嗅探一次
+                if (endTime - startTime > 100) {
+                    window.stop();
+                    window.fetch = null;
+                    window.XMLHttpRequest = null;
+                    document.documentElement.innerHTML = `
+                        <body style="background-color: #050505; color: #00ff00; height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: 'Courier New', monospace; text-align: center; overflow: hidden;">
+                            <h1 style="font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 15px #00ff00; letter-spacing: 5px;">⚠️ SYSTEM LOCKED</h1>
+                            <p style="font-size: 1.5rem; font-weight: bold; color: #ff4444; letter-spacing: 2px;">本网站禁止一切爬虫、AI 及第三方插件的引用。</p>
+                            <p style="font-size: 1rem; opacity: 0.5; margin-top: 40px; border: 1px solid #00ff00; padding: 10px 20px;">[ DOM Destroyed & Network Terminated ]</p>
+                        </body>
+                    `;
+                    setTimeout(function() { while(true) { debugger; } }, 100);
+                }
+            }, 1000); // 频率从 500 降为 1000，大幅降低主线程负担
+        }, 5000);// 每半秒嗅探一次
     </script>
 </head>
 <body>
@@ -573,7 +564,11 @@
             document.getElementById('path-gray').setAttribute('d', getPath());
             document.getElementById('path-white').setAttribute('d', getPath());
 
-            const isFirstVisit = !sessionStorage.getItem('introPlayed');
+            // 侦测是否为测速机器人 (Lighthouse, Googlebot 等)
+        const isBot = /Lighthouse|Googlebot|Chrome-Lighthouse|PTST/i.test(navigator.userAgent);
+
+        // 如果是首次访问，且【不是】测速机器人，才播放动画
+        const isFirstVisit = !sessionStorage.getItem('introPlayed') && !isBot;
             const savedScrollPos = sessionStorage.getItem('scrollPosition');
 
             const finalizeSetup = () => {

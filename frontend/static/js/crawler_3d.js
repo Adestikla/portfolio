@@ -275,8 +275,19 @@ window.addEventListener("load", () => {
     const phasesArray = [shapes.chaos, shapes.web, shapes.network, shapes.streams, shapes.logo];
     const clock = new THREE.Clock();
 
+    // 性能核弹：交叉观察器。只有当 3D 画布进入屏幕时，才允许渲染！
+    let is3DVisible = false;
+    const observer = new IntersectionObserver((entries) => {
+        is3DVisible = entries[0].isIntersecting;
+    }, { rootMargin: "0px" });
+    observer.observe(document.querySelector('.crawler-3d-section'));
+
     function animate() {
         requestAnimationFrame(animate);
+
+        // 核心拦截：如果没滚动到 3D 区域，直接跳出函数，0 性能消耗！
+        if (!is3DVisible) return;
+
         uniforms.uTime.value = clock.getElapsedTime();
         uniforms.uPhase.value = params.phase;
 
@@ -287,7 +298,6 @@ window.addEventListener("load", () => {
         let arr1 = phasesArray[currentPhaseIdx];
         let arr2 = phasesArray[nextPhaseIdx];
 
-        // 高效更新
         for (let i = 0; i < particleCount * 3; i++) {
             posAttr.array[i] = arr1[i] + (arr2[i] - arr1[i]) * progress;
         }
