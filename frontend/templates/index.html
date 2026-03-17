@@ -638,11 +638,7 @@
                 sessionStorage.setItem('scrollPosition', window.scrollY);
             }, { passive: true });
         });
-
-        <script src="{{ url_for('static', path='js/snap_effect.js') }}"></script>
-    <script src="{{ url_for('static', path='js/crawler_3d.js') }}"></script>
-
-    <script>
+    </script> <script>
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('crawl-btn');
             const input = document.getElementById('crawl-input');
