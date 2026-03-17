@@ -2,13 +2,16 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.title_detail }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
 <body class="pdf-theme">
+
     <div id="image-lightbox" class="image-lightbox">
         <div class="rotate-tip">{{ t.rotate_tip }}</div>
         <img id="lightbox-img" src="" alt="Full Scale View">
     </div>
-
     <nav class="pdf-nav">
     <script>
         if (window.top !== window.self) {
@@ -156,8 +159,6 @@
             });
         });
     </script>
-    </head>
-<body class="pdf-theme">
     <nav class="pdf-nav">
         <a href="/?lang={{ lang }}" class="back-btn">{{ t.btn_back }}</a>
         <span>0{{ current_index }} / 04</span>
@@ -243,6 +244,6 @@
             {% endif %}
         </footer>
     </div>
-
+    </nav>
 </body>
 </html>
