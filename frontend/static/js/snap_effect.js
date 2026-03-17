@@ -137,4 +137,6 @@ const initSnapAnimations = () => {
         new p5(sketch);
     });
 };
-window.addEventListener('load', initSnapAnimations);
+window.addEventListener('load', () => {
+    setTimeout(initSnapAnimations, 3000);
+});

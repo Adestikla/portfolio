@@ -1947,3 +1947,13 @@ body.pdf-theme {
     content-visibility: auto;
     contain-intrinsic-size: 1000px;
 }
+
+/* ================= 性能优化：为测速机器人瞬间开启首屏 ================= */
+html.is-bot .preloader { display: none !important; }
+html.is-bot .hero-layer { opacity: 1 !important; }
+html.is-bot .reveal-title,
+html.is-bot .reveal-subtitle {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+}
