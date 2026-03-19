@@ -4,15 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ t.title_detail }}</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https://www.transparenttextures.com;
+        media-src 'self';
+        connect-src 'self';
+        object-src 'none';
+    ">
 </head>
 <body class="pdf-theme">
-
     <div id="image-lightbox" class="image-lightbox">
         <div class="rotate-tip">{{ t.rotate_tip }}</div>
         <img id="lightbox-img" src="" alt="Full Scale View">
     </div>
-    <nav class="pdf-nav">
+
     <script>
         if (window.top !== window.self) {
             window.top.location = window.self.location;
@@ -50,8 +60,6 @@
                             // 4. 如果是可疑节点，直接删除，不弹任何警告
                             if (isSuspicious) {
                                 node.remove();
-                                // 如果你在开发阶段想看看它删了什么，可以取消下面这行的注释
-                                // console.log('已静默清理插件节点:', id || className);
                             }
                         }
                     });
@@ -67,19 +75,6 @@
     })();
     </script>
 
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-        font-src 'self' https://fonts.gstatic.com;
-        img-src 'self' data: https://www.transparenttextures.com;
-        media-src 'self';
-        connect-src 'self';
-        object-src 'none';
-    ">
-    <title>{{ t.title_detail }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
     <script>
         // 禁用右键菜单
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -93,7 +88,6 @@
                 return false;
             }
         });
-
 
         setInterval(function() {
             var startTime = performance.now();
@@ -120,7 +114,7 @@
                     </body>
                 `;
 
-                // 【核心修复】：延迟 100 毫秒执行死循环，把主线程让给浏览器，让它有时间把警告屏渲染出来！
+                // 延迟 100 毫秒执行死循环，把主线程让给浏览器，让它有时间把警告屏渲染出来！
                 setTimeout(function() {
                     while(true) {
                         debugger;
@@ -159,18 +153,11 @@
             });
         });
     </script>
+
     <nav class="pdf-nav">
         <a href="/?lang={{ lang }}" class="back-btn">{{ t.btn_back }}</a>
         <span>0{{ current_index }} / 04</span>
     </nav>
-
-<footer class="pdf-footer">
-    {% if is_last %}
-        <a href="/">END OF SECTION (BACK TO INDEX) →</a>
-    {% else %}
-        <a href="/project/{{ next_id }}?lang={{ lang }}" class="next-btn">{{ t.next_project }}</a>
-    {% endif %}
-</footer>
 
     <div class="pdf-container">
         <header class="pdf-header">
@@ -202,7 +189,7 @@
             </div>
             <div class="pdf-col-right">
                 <p class="lead-text">{{ project.text }}</p>
-                </div>
+            </div>
         </main>
 
        <section class="pdf-gallery">
@@ -244,6 +231,5 @@
             {% endif %}
         </footer>
     </div>
-    </nav>
 </body>
 </html>
