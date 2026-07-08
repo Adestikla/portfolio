@@ -1,0 +1,13 @@
+# 这里必须填入你刚才在 Fly.io 网页端创建的那个应用名称（比如 portfolio-9mg0mw）
+app = "adestikla"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # 彻底关闭自动休眠！让你的 3D 矩阵 24 小时满血待命
+  auto_stop_machines = false  
+  auto_start_machines = true
+  min_machines_running = 1
