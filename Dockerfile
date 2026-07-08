@@ -13,5 +13,6 @@ COPY . .
 # 暴露给外部访问的端口
 EXPOSE 8080
 
+
 # 启动命令（精确指向 backend 目录下的 main.py）
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8080"]
